@@ -21,7 +21,7 @@ export default function SignUp() {
   };
 
   const handleGuestLogin = () => {
-
+    navigate('/home');
   };
 
   return (
