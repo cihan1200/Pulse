@@ -1,0 +1,79 @@
+.header {
+  background-color: inherit;
+  color: inherit;
+  border-bottom: 1px solid;
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.brand-logo {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.menu-wrapper {
+  display: flex;
+  justify-content: flex-end;
+  background-color: inherit;
+  color: inherit;
+}
+
+.menu {
+  background-color: inherit;
+  color: inherit;
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 5px;
+  margin-top: 5px;
+  border: 1px solid;
+  border-radius: 20px;
+  width: 150px;
+}
+
+.menu a {
+  text-decoration: none;
+  color: inherit;
+  padding: 10px;
+}
+
+.menu-button {
+  font-size: 1.2rem;
+  color: inherit;
+  border: none;
+  outline: none;
+  background-color: inherit;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.search-bar {
+  background-color: inherit;
+  color: inherit;
+  padding: 5px 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid;
+  border-radius: 20px;
+  width: 40%;
+}
+
+.search-bar:focus {
+  outline: none;
+}

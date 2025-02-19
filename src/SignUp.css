@@ -1,0 +1,112 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: inherit;
+}
+
+.form {
+  background-color: inherit;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.5);
+  width: 320px;
+  text-align: center;
+}
+
+.header-text {
+  margin-bottom: 24px;
+  color: inherit;
+}
+
+.input {
+  font-family: "Montserrat", sans-serif;
+  width: 100%;
+  height: 40px;
+  margin-bottom: 16px;
+  padding: 0 12px;
+  border-radius: 20px;
+  border: 1px solid #b197fc;
+  font-size: 16px;
+  box-sizing: border-box;
+  background-color: inherit;
+  color: inherit;
+}
+
+.signup-button {
+  font-family: "Montserrat", sans-serif;
+  width: 100%;
+  height: 40px;
+  background-color: #b197fc;
+  color: inherit;
+  border: none;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.signup-button:hover {
+  background-color: #9775fa;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 30px 0;
+  color: inherit;
+  font-size: 14px;
+}
+
+.google-button {
+  border: 1px solid #b197fc;
+  font-family: "Montserrat", sans-serif;
+  width: 100%;
+  height: 40px;
+  background-color: #b197fc;
+  color: inherit;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.google-button:hover {
+  background-color: #9775fa;
+}
+
+.login-button {
+  border: 1px solid #b197fc;
+  font-family: "Montserrat", sans-serif;
+  width: 100%;
+  height: 40px;
+  background-color: #b197fc;
+  color: inherit;
+  border-radius: 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: background-color 0.2s;
+}
+
+.login-button:hover {
+  background-color: #9775fa;
+}
+
+.divider::before {
+  content: "";
+  display: inline-block;
+  width: 146px;
+  height: 1px;
+  background-color: #b197fc;
+}
+
+.divider::after {
+  content: "";
+  display: inline-block;
+  width: 146px;
+  height: 1px;
+  background-color: #b197fc;
+}
