@@ -6,6 +6,9 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import User from './models/user.js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 const port = 3000;

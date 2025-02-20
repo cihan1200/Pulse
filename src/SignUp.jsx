@@ -41,7 +41,7 @@ export default function SignUp() {
     }
     if (!isValid) return;
     try {
-      const response = await axios.post('http://localhost:3000/signup', { email, password });
+      const response = await axios.post('/signup', { email, password });
       if (response.status === 201) {
         navigate('/home');
       }
