@@ -110,3 +110,14 @@
   height: 1px;
   background-color: #b197fc;
 }
+
+.warning-text {
+  color: red;
+  font-size: 0.65rem;
+  margin-top: 5px;
+  word-wrap: break-word;
+}
+
+.no-bottom-margin {
+  margin-bottom: 0;
+}

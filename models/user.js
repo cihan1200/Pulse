@@ -13,11 +13,11 @@ const userSchema = new mongoose.Schema({
   },
   profilePicture: {
     type: String,
-    default: 'https://example.com/default-avatar.jpg' // Add your default image URL
+    default: 'http://localhost:3000/user-icon.svg'
   },
   username: {
     type: String,
-    default: function() {
+    default: function () {
       return `user-${this._id.toString().slice(-5)}`;
     }
   },
@@ -35,8 +35,7 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Hash password before saving
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   if (this.isModified('password')) {
     this.password = await bcrypt.hash(this.password, 10);
   }
