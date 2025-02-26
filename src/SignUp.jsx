@@ -43,6 +43,7 @@ export default function SignUp() {
     try {
       const response = await axios.post('/signup', { email, password });
       if (response.status === 201) {
+        localStorage.setItem("authToken", response.data.token);
         navigate('/home');
       }
     } catch (err) {
@@ -56,10 +57,6 @@ export default function SignUp() {
   };
 
   const handleGoogleSignIn = () => {
-
-  };
-
-  const handleLogin = () => {
 
   };
 
@@ -79,7 +76,7 @@ export default function SignUp() {
           <button className="signup-button" type="submit">Sign Up</button>
           <div className="divider">OR</div>
           <button className="google-button" type="button" onClick={handleGoogleSignIn}>Continue with Google</button>
-          <button className="login-button" type="button" onClick={handleLogin}>Login</button>
+          <button className="login-button" type="button" onClick={() => { navigate("/login"); }}>Login</button>
           <button className="login-button" type="button" onClick={handleGuestLogin}>Browse as guest</button>
         </form>
       </div>
