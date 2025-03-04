@@ -1,0 +1,159 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 55px);
+}
+
+.create-post-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 715px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.form-title {
+  color: inherit;
+}
+
+.post-type-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.type-text {
+  color: inherit;
+  background-color: inherit;
+  font-family: "Montserrat", sans-serif;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.type-media {
+  color: inherit;
+  background-color: inherit;
+  font-family: "Montserrat", sans-serif;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.active {
+  text-decoration: underline;
+}
+
+.create-post-title {
+  font-weight: bold;
+  border: 1px solid #b197fc;
+  border-radius: 20px;
+  font-family: "Montserrat", sans-serif;
+  color: inherit;
+  margin-top: 10px;
+  padding: 5px 10px;
+  color: inherit;
+  background-color: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+}
+
+.body {
+  resize: none;
+  border: 1px solid #b197fc;
+  border-radius: 20px;
+  font-family: "Montserrat", sans-serif;
+  color: inherit;
+  margin-top: 20px;
+  padding: 10px;
+  color: inherit;
+  background-color: inherit;
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+  height: 300px;
+}
+
+.media-upload-area {
+  height: 300px;
+  width: 100%;
+  border: 1px dashed #b197fc;
+  border-radius: 20px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.65rem;
+}
+
+.upload-media-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+}
+
+.upload-icon {
+  width: 24px;
+}
+
+.create-post-title:focus {
+  outline: none;
+}
+
+.body:focus {
+  outline: none;
+}
+
+.char-counter {
+  font-family: "Montserrat", sans-serif;
+  color: inherit;
+  margin-top: 5px;
+  font-size: 0.7rem;
+  color: inherit;
+  align-self: flex-end;
+  margin-right: 15px;
+}
+
+.navigate-buttons {
+  display: flex;
+  align-self: flex-start;
+  gap: 10px;
+}
+
+.post-button {
+  font-family: "Montserrat", sans-serif;
+  border: 1px solid #b197fc;
+  border-radius: 20px;
+  padding: 5px 10px;
+  outline: none;
+  background-color: inherit;
+  color: inherit;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.2s;
+}
+
+.post-button:hover {
+  background-color: rgba(177, 151, 252, 0.3);
+}
+
+.hide {
+  display: none !important;
+}
+
+.body-char-counter {
+  font-family: "Montserrat", sans-serif;
+  color: inherit;
+  margin-top: 5px;
+  font-size: 0.7rem;
+  color: inherit;
+  align-self: flex-end;
+  margin-right: 15px;
+}

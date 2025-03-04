@@ -24,6 +24,16 @@
   overflow: hidden;
 }
 
+.post-text {
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.post-media-container:not(:has(img, video)) {
+  border: none;
+  border-radius: 0;
+}
+
 .post-media {
   display: flex;
   justify-content: center;

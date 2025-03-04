@@ -1,9 +1,30 @@
 import "./Header.css";
 import pulseLogo from "./assets/pulse-logo.svg";
-import { useState } from "react";
+import plusIcon from "./assets/plus-icon.svg";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Header() {
-  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isDarkTheme, setIsDarkTheme] = useState(() => {
+    return localStorage.getItem("theme") === "dark";
+  });
+  const navigate = useNavigate();
+  const checkboxRef = useRef(null);
+
+  useEffect(() => {
+    const body = document.body;
+    if (isDarkTheme) {
+      body.style.color = "#ececec";
+      body.style.backgroundColor = "#212121";
+    } else {
+      body.style.color = "#212121";
+      body.style.backgroundColor = "#ececec";
+    }
+
+    if (checkboxRef.current) {
+      checkboxRef.current.checked = isDarkTheme;
+    }
+  }, [isDarkTheme]);
 
   const toggleMenu = () => {
     const menu = document.getElementById("menu");
@@ -11,35 +32,34 @@ export default function Header() {
   };
 
   const toggleTheme = () => {
-    const body = document.body;
-    if (isDarkTheme) {
-      body.style.color = "#212121";
-      body.style.backgroundColor = "#ececec";
-    } else {
-      body.style.color = "#ececec";
-      body.style.backgroundColor = "#212121";
-    }
-    setIsDarkTheme(!isDarkTheme);
+    setIsDarkTheme((prevTheme) => {
+      const newTheme = !prevTheme;
+      localStorage.setItem("theme", newTheme ? "dark" : "light");
+      return newTheme;
+    });
   };
 
   return (
     <>
       <header className="header">
-        <a className="brand" href="/home">
+        <button className="brand" onClick={() => { navigate("/home"); }}>
           <img className="brand-logo" src={pulseLogo} alt="vite logo" />
           <span>Pulse</span>
-        </a>
+        </button>
         <input className="search-bar" type="text" />
-        <button className="menu-button" aria-label="Toggle menu" onClick={toggleMenu}>☰</button>
+        <div className="header-buttons">
+          <button className="create-button" onClick={() => { navigate("/create"); }}><img className="plus-icon" src={plusIcon} alt="plus icon" />Create</button>
+          <button className="menu-button" aria-label="Toggle menu" onClick={toggleMenu}>☰</button>
+        </div>
       </header>
       <div className="menu-wrapper">
         <nav className="menu hidden" id="menu">
-          <a href="/home">Home</a>
-          <a href="/about">About</a>
-          <a href="/services">Profile</a>
-          <a href="/contact">Contact</a>
+          <button className="links-button" onClick={() => { navigate("/home"); }}>Home</button>
+          <button className="links-button" onClick={() => { navigate("/about"); }}>About</button>
+          <button className="links-button" onClick={() => { navigate("/profile"); }}>Profile</button>
+          <button className="links-button" onClick={() => { navigate("/contact"); }}>Contact</button>
           <label className="switch">
-            <input type="checkbox" onClick={toggleTheme} />
+            <input type="checkbox" onChange={toggleTheme} ref={checkboxRef} />
             <span className="slider round">🌙☀️</span>
           </label>
         </nav>

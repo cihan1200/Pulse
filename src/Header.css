@@ -14,6 +14,10 @@
 }
 
 .brand {
+  outline: none;
+  border: none;
+  cursor: pointer;
+  background-color: inherit;
   font-family: "Jaro", sans-serif;
   font-size: 1.2rem;
   display: flex;
@@ -80,9 +84,9 @@
 
 .search-bar {
   background-color: inherit;
+  font-family: "Montserrat", sans-serif;
   color: inherit;
   padding: 5px 10px;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   border: 1px solid #b197fc;
   border-radius: 20px;
   width: 40%;
@@ -90,6 +94,37 @@
 
 .search-bar:focus {
   outline: none;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.create-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  background-color: inherit;
+  color: inherit;
+  padding: 5px 10px;
+  font-family: "Montserrat", sans-serif;
+  border: 1px solid #b197fc;
+  border-radius: 20px;
+  outline: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 0.8rem;
+}
+
+.plus-icon {
+  width: 1em;
+  height: 1em;
+}
+
+.create-button:hover {
+  background-color: rgba(177, 151, 252, 0.3);
 }
 
 .switch {
@@ -151,4 +186,22 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
+}
+
+.links-button {
+  margin-bottom: 10px;
+  font-family: "Montserrat", sans-serif;
+  background-color: inherit;
+  color: inherit;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+nav button:first-of-type {
+  margin-top: 5px;
+}
+
+.links-button:hover {
+  color: #b197fc;
 }

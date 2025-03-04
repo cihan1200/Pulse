@@ -4,6 +4,7 @@ import Home from "./Home";
 import SignUp from "./SignUp";
 import PrivateRoute from "./PrivateRoute";
 import Login from "./Login";
+import Create from "./Create";
 
 export default function App() {
 
@@ -12,6 +13,14 @@ export default function App() {
     element: (
       <PrivateRoute>
         <Home />
+      </PrivateRoute>
+    )
+  },
+  {
+    path: "/create",
+    element: (
+      <PrivateRoute>
+        <Create />
       </PrivateRoute>
     )
   },
