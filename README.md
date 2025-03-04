@@ -1,6 +1,6 @@
-# React + Vite
+# Pulse
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Pulse is a very simple social media application. Create and share posts with other people.
 
 Currently, two official plugins are available:
 
