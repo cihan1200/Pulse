@@ -1,0 +1,265 @@
+import "./Post.css";
+
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
+
+import thumbsUpIcon from "./assets/thumbs-up-icon.svg";
+import thumbsDownIcon from "./assets/thumbs-down-icon.svg";
+import commentIcon from "./assets/comment-icon.svg";
+import prevMediaButtonIcon from "./assets/prev-media-button-icon.svg";
+import nextMediaButtonIcon from "./assets/next-media-button-icon.svg";
+
+
+export default function Post({ post, index }) {
+  const [likesHovered, setLikesHovered] = useState({});
+  const [dislikesHovered, setDislikesHovered] = useState({});
+  const [currentMediaIndices, setCurrentMediaIndices] = useState({});
+  const [showUserPanels, setShowUserPanels] = useState({});
+  const [posts, setPosts] = useState([]);
+  const hoverTimeouts = useRef({});
+  const leaveTimeouts = useRef({});
+  const navigate = useNavigate();
+  const token = localStorage.getItem("authToken");
+  const userId = token ? jwtDecode(token).id : null;
+  const currentMediaIndex = currentMediaIndices[post._id] >= 0 ? currentMediaIndices[post._id] : 0;
+  const mediaLength = post.media?.length || 0;
+  const showUserPanel = showUserPanels[post._id] || false;
+
+  /*useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/posts");
+        setPosts(response.data);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
+      }
+    };
+    fetchPosts();
+  }, []);*/
+
+  const handleMouseEnter = (postId) => {
+    clearTimeout(leaveTimeouts.current[postId]);
+    hoverTimeouts.current[postId] = setTimeout(() => {
+      setShowUserPanels(prev => ({ ...prev, [postId]: true }));
+    }, 500);
+  };
+
+  const handleMouseLeave = (postId) => {
+    clearTimeout(hoverTimeouts.current[postId]);
+    leaveTimeouts.current[postId] = setTimeout(() => {
+      setShowUserPanels(prev => ({ ...prev, [postId]: false }));
+    }, 300);
+  };
+
+  const handleLikesMouseEnter = (postId) => {
+    setLikesHovered(prev => ({ ...prev, [postId]: true }));
+  };
+
+  const handleLikesMouseLeave = (postId) => {
+    setLikesHovered(prev => ({ ...prev, [postId]: false }));
+  };
+
+  const handleDislikesMouseEnter = (postId) => {
+    setDislikesHovered(prev => ({ ...prev, [postId]: true }));
+  };
+
+  const handleDislikesMouseLeave = (postId) => {
+    setDislikesHovered(prev => ({ ...prev, [postId]: false }));
+  };
+
+  const handleLike = async (postId) => {
+    if (!userId) {
+      console.error("User ID not found");
+      return;
+    }
+    setPosts(prevPosts =>
+      prevPosts.map(post => {
+        if (post._id !== postId) return post;
+        const hasLiked = post.likes?.includes(userId);
+        const updatedLikes = hasLiked
+          ? post.likes?.filter(id => id !== userId) || []
+          : [...(post.likes || []), userId];
+        const updatedDislikes = post.dislikes?.filter(id => id !== userId) || [];
+        return { ...post, likes: updatedLikes, dislikes: updatedDislikes };
+      })
+    );
+    try {
+      const response = await fetch(`http://localhost:3000/posts/${postId}/like`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await response.json();
+      setPosts(prevPosts =>
+        prevPosts.map(post =>
+          post._id === postId
+            ? { ...post, likes: data.likes, dislikes: data.dislikes }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Error liking post:", error);
+    }
+  };
+
+  const handleDislike = async (postId) => {
+    if (!userId) {
+      console.error("User ID not found");
+      return;
+    }
+    setPosts(prevPosts =>
+      prevPosts.map(post => {
+        if (post._id !== postId) return post;
+        const hasDisliked = post.dislikes?.includes(userId);
+        const updatedDislikes = hasDisliked
+          ? post.dislikes?.filter(id => id !== userId) || []
+          : [...(post.dislikes || []), userId];
+        const updatedLikes = post.likes?.filter(id => id !== userId) || [];
+        return { ...post, likes: updatedLikes, dislikes: updatedDislikes };
+      })
+    );
+    try {
+      const response = await fetch(`http://localhost:3000/posts/${postId}/dislike`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId }),
+      });
+      const data = await response.json();
+      setPosts(prevPosts =>
+        prevPosts.map(post =>
+          post._id === postId
+            ? { ...post, likes: data.likes, dislikes: data.dislikes }
+            : post
+        )
+      );
+    } catch (error) {
+      console.error("Error disliking post:", error);
+    }
+  };
+
+  const handleCommentClick = (postId) => {
+    navigate(`/comments`, { state: { postId } });
+  };
+
+  return (
+    <div className= {`post-container ${post.isFirstPost ? "add-margin" : ""}`
+} key = { post._id } >
+  <div className="user-info" >
+    <img className="profile-picture" src = { post.postedBy?.profilePicture } alt = "profile picture" />
+      <div className="user-info-wrapper" onMouseEnter = {() => handleMouseEnter(post._id)} onMouseLeave = {() => handleMouseLeave(post._id)}>
+        <a className="user-name" href = "#" >
+          { post.postedBy?.username || "Username" }
+          </a>
+{
+  showUserPanel && (
+    <div className="user-panel" >
+      <div className="user-panel-header" >
+        <img className="panel-profile-picture" src = { post.postedBy?.profilePicture } alt = "profile" />
+          <div className="user-stats" >
+            <span className="user-panel-name" > { post.postedBy?.username || "Username" } </span>
+              < span className = "follower-count" > { post.postedBy?.followers.length } followers </span>
+                </div>
+                </div>
+                < div className = "user-bio" > { post.postedBy?.about } </div>
+                  < div className = "user-actions" >
+                    <button className="follow-button" > Follow </button>
+                      </div>
+                      </div>
+          )
+}
+</div>
+  <span>•</span>
+    < span className = "time-since-posted" > { new Date(post.createdAt).toLocaleString() } </span>
+      </div>
+      < strong className = "title-of-post" > { post.title } </strong>
+        < p className = {`post-text ${post.type === "text" ? "" : "hide"}`}> { post.body } </p>
+          < div className = {`post-media-container ${post.type === "media" ? "" : "hide"}`}>
+          {
+            post.media?.length > 0 && post.media[currentMediaIndex] && (
+              post.media[currentMediaIndex].includes("mp4") ? (
+                <video
+              className= "video"
+              src={`http://${post.media[currentMediaIndex]}`
+          }
+controls
+loading = "lazy"
+alt = "Post Media"
+  />
+          ) : (
+  <img
+              className= "post-media"
+src = {`http://${post.media[currentMediaIndex]}`}
+loading = "lazy"
+alt = "Post Media"
+  />
+          )
+        )}
+{
+  mediaLength > 1 && (
+    <div className="media-navigation" >
+      <button
+              className="prev-media-button"
+  onClick = {() => {
+    const newIndex =
+      currentMediaIndex === 0
+        ? mediaLength - 1
+        : currentMediaIndex - 1;
+    setCurrentMediaIndices(prev => ({
+      ...prev,
+      [post._id]: newIndex
+    }));
+  }
+}
+            >
+  <img src={ prevMediaButtonIcon } alt = "Previous media" />
+    </button>
+    < button
+className = "next-media-button"
+onClick = {() => {
+  const newIndex =
+    currentMediaIndex === mediaLength - 1
+      ? 0
+      : currentMediaIndex + 1;
+  setCurrentMediaIndices(prev => ({
+    ...prev,
+    [post._id]: newIndex
+  }));
+}}
+            >
+  <img src={ nextMediaButtonIcon } alt = "Next media" />
+    </button>
+    </div>
+        )}
+</div>
+  < div className = "post-buttons-container" >
+    <button className={ `feedback-buttons ${likesHovered[post._id] ? 'hover-likes' : ''} ${dislikesHovered[post._id] ? 'hover-dislikes' : ''}` }>
+      <div
+            className="likes-container"
+onClick = {() => handleLike(post._id)}
+onMouseEnter = {() => handleLikesMouseEnter(post._id)}
+onMouseLeave = {() => handleLikesMouseLeave(post._id)}
+          >
+  <span>{ posts.find(p => p._id === post._id)?.likes?.length || 0 } </span>
+  < img className = "thumbs-up-icon" src = { thumbsUpIcon } alt = "Like" />
+    </div>
+    < div
+className = "dislikes-container"
+onClick = {() => handleDislike(post._id)}
+onMouseEnter = {() => handleDislikesMouseEnter(post._id)}
+onMouseLeave = {() => handleDislikesMouseLeave(post._id)}
+          >
+  <span>{ posts.find(p => p._id === post._id)?.dislikes?.length || 0 } </span>
+  < img className = "thumbs-down-icon" src = { thumbsDownIcon } alt = "Dislike" />
+    </div>
+    </button>
+    < button className = "comments-button" onClick = {() => handleCommentClick(post._id)}>
+      <span>{ posts.find(p => p._id === post._id)?.comments?.length || 0 } </span>
+      < img className = "comment-icon" src = { commentIcon } alt = "comment icon" />
+        </button>
+        </div>
+{ index !== posts.length - 1 && <hr className="post-divider" />}
+</div>
+  );
+}

@@ -1,0 +1,20 @@
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 0.8rem;
+  background-color: inherit;
+  color: inherit;
+  border-top: 1px solid #b197fc;
+  margin-top: 31px; /* This pushes the footer to the bottom */
+}
+
+.pulse-logo {
+  width: 1em;
+  height: 1em;
+}
+
+.hide {
+  display: none;
+}

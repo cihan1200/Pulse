@@ -8,6 +8,10 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import User from './models/user.js';
 import dotenv from 'dotenv';
+import multer from 'multer';
+import fs from 'fs';
+import Post from './models/post.js';
+import Comment from './models/comment.js';
 
 dotenv.config();
 
@@ -25,6 +29,44 @@ app.use(express.static(path.join(__dirname, 'dist')));
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("Database connected."))
   .catch((err) => console.error("MongoDB connection error:", err));
+
+const uploadDir = path.join(__dirname, "public", "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
+
+app.post('/upload', upload.array('media'), async (req, res) => {
+  const { userId, title, body, type } = req.body;
+  let mediaUrls = [];
+  if (req.files) {
+    mediaUrls = req.files.map(file => `localhost:3000/uploads/${file.filename}`);
+  }
+  try {
+    const newPost = new Post({
+      postedBy: userId,
+      title,
+      body,
+      type,
+      media: mediaUrls,
+    });
+    await newPost.save();
+    res.status(200).json({ message: "Post created successfully." });
+  } catch (err) {
+    console.error("Post creation error:", err);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+});
 
 app.post('/signup', async (req, res) => {
   const { email, password } = req.body;
@@ -59,6 +101,114 @@ app.post('/api-login', async (req, res) => {
   } catch (err) {
     console.error("Login error:", err);
     res.status(500).json({ message: "Server error. Please try again later." });
+  }
+});
+
+app.get('/posts', async (req, res) => {
+  try {
+    const posts = await Post.find().populate('postedBy', 'email username profilePicture followers about');
+    res.status(200).json(posts);
+  } catch (err) {
+    console.error("Fetch posts error:", err);
+    res.status(500).json({ message: "Server error. Please try again later." });
+  }
+});
+
+app.post('/posts/:postId/like', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    post.dislikes = post.dislikes.filter(id => id !== userId);
+    if (post.likes.includes(userId)) {
+      post.likes = post.likes.filter(id => id !== userId);
+    } else {
+      post.likes.push(userId);
+    }
+    await post.save();
+    res.json({ likes: post.likes, dislikes: post.dislikes });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.post('/posts/:postId/dislike', async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const post = await Post.findById(req.params.postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    post.likes = post.likes.filter(id => id !== userId);
+    if (post.dislikes.includes(userId)) {
+      post.dislikes = post.dislikes.filter(id => id !== userId);
+    } else {
+      post.dislikes.push(userId);
+    }
+    await post.save();
+    res.json({ likes: post.likes, dislikes: post.dislikes });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.get("/posts/:postId/comments", async (req, res) => {
+  const { postId } = req.params;
+
+  try {
+    const post = await Post.findById(postId).populate({
+      path: "comments",
+      populate: {
+        path: "postedBy",
+        select: "username profilePicture", // customize what you return
+      },
+    });
+
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    res.json(post); // send just the comments
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ message: "Server error while fetching comments" });
+  }
+});
+
+app.post('/posts/:postId/new-comment', async (req, res) => {
+  const { postId } = req.params;
+  const { comment, userId } = req.body;
+  try {
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    const newComment = new Comment({
+      content: comment,
+      postedBy: userId,
+      postId: postId,
+    });
+    await newComment.save();
+    post.comments.push(newComment._id);
+    await post.save();
+    res.status(201).json({ message: "Comment added successfully.", comment: newComment });
+  } catch (error) {
+    console.error("Error adding comment:", error);
+    res.status(500).json({ message: "Server error while adding comment" });
+  }
+});
+
+app.get('/posts/:postId', async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.postId).populate('postedBy', 'email username profilePicture followers about');
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+    res.json({ post });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 

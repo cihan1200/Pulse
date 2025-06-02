@@ -15,6 +15,11 @@ const CommentSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  postId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Post",
+    required: true,
+  },
 });
 
 export default mongoose.model('Comment', CommentSchema);

@@ -1,4 +1,6 @@
-const PostSchema = new Schema({
+import mongoose from "mongoose";
+
+const PostSchema = new mongoose.Schema({
   isFirstPost: {
     type: Boolean,
     default: false,
@@ -8,10 +10,10 @@ const PostSchema = new Schema({
     ref: "User",
     required: true,
   },
-  media: {
+  media: [{
     type: String,
     default: null,
-  },
+  }],
   createdAt: {
     type: Date,
     default: Date.now,
@@ -20,17 +22,20 @@ const PostSchema = new Schema({
     type: String,
     required: true,
   },
-  likes: {
-    type: Number,
-    default: 0,
-  },
-  dislikes: {
-    type: Number,
-    default: 0,
-  },
+  likes: [{
+    type: String,
+    default: null,
+  }],
+  dislikes: [{
+    type: String,
+    default: null,
+  }],
   type: {
     type: String,
     default: "text",
+  },
+  body: {
+    type: String,
   },
   comments: [{
     type: mongoose.Schema.Types.ObjectId,

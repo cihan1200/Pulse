@@ -1,75 +1,118 @@
 import "./Create.css";
-import uploadIcon from "./assets/upload-icon.svg";
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
+import xMarkIcon from "./assets/xmark.svg";
+
 import Header from "./Header";
+import Footer from "./Footer";
+import TextPostForm from "./TextPostForm";
+import MediaPostForm from "./MediaPostForm";
+
+import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
 export default function Create() {
+  const [mediaFiles, setMediaFiles] = useState([]);
+  const [postType, setPostType] = useState("text");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [postType, setPostType] = useState("text");
-  const maxTitleLength = 300;
-  const maxBodyLength = 1000;
+  const [uploadError, setUploadError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const timeoutRef = useRef(null);
+
   const navigate = useNavigate();
 
+  const rootDiv = document.getElementById("root");
+  rootDiv.style.height = "100vh";
+
   useEffect(() => {
-    if (postType === "text") {
-      document.querySelector(".body").classList.remove("hide");
-      document.querySelector(".body-char-counter").classList.remove("hide");
-      document.querySelector(".media-upload-area").classList.add("hide");
-    } else if (postType === "media") {
-      document.querySelector(".media-upload-area").classList.remove("hide");
-      document.querySelector(".body").classList.add("hide");
-      document.querySelector(".body-char-counter").classList.add("hide");
+    if (uploadError !== "") {
+      const errorElement = document.querySelector(".upload-error");
+      errorElement.classList.remove("hide");
+      timeoutRef.current = setTimeout(() => {
+        errorElement.classList.add("hide");
+        setUploadError("");
+      }, 3000);
     }
-  }, [postType]);
+  }, [uploadError]);
 
-  const handleTitleChange = (e) => {
-    if (e.target.value.length <= maxTitleLength) {
-      setTitle(e.target.value);
-    }
+  const handleClickErrorCloseButton = () => {
+    timeoutRef.current && clearTimeout(timeoutRef.current);
+    const errorElement = document.querySelector(".upload-error");
+    errorElement.classList.add("hide");
+    setUploadError("");
   };
 
-  const handleBodyChange = (e) => {
-    if (e.target.value.length <= maxBodyLength) {
-      setBody(e.target.value);
+  const handleSubmit = async () => {
+
+    const token = localStorage.getItem("authToken");
+    const userId = token ? jwtDecode(token).id : null;
+    const formData = new FormData();
+    formData.append("userId", userId);
+    formData.append("title", title);
+    formData.append("body", body);
+    formData.append("type", postType);
+    mediaFiles.forEach((file) => {
+      formData.append("media", file);
+    });
+    try {
+      setLoading(true);
+      if (loading) {
+        return (
+          <div className="loading">
+            <div className="spinner"></div>
+          </div>
+        );
+      }
+      await axios.post("http://localhost:3000/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      navigate("/home");
+    } catch (err) {
+      console.error("Submission error:", err);
     }
-  };
-
-  const handleTextType = () => {
-    setPostType("text");
-  };
-
-  const handleMediaType = () => {
-    setPostType("media");
   };
 
   return (
     <>
       <Header />
       <div className="wrapper">
-        <div className="create-post-form">
-          <h1 className="form-title">Create post</h1>
-          <div className="post-type-buttons">
-            <button className={`type-text ${postType === "text" ? "active" : ""}`} onClick={handleTextType}>Text</button>
-            <button className={`type-media ${postType === "media" ? "active" : ""}`} onClick={handleMediaType}>Images & Video</button>
-          </div>
-          <input className="create-post-title" type="text" placeholder="Title" value={title} onChange={handleTitleChange} />
-          <span className="char-counter">{title.length}/{maxTitleLength}</span>
-          <textarea className="body" name="body" id="body" placeholder="Body" value={body} onChange={handleBodyChange}></textarea>
-          <div className="media-upload-area">
-            <label>Drag and Drop or upload media</label>
-            <button className="upload-media-button">
-              <img className="upload-icon" src={uploadIcon} alt="upload icon" />
-            </button>
-          </div>
-          <span className="body-char-counter">{body.length}/{maxBodyLength}</span>
-          <div className="navigate-buttons">
-            <button className="post-button">Post</button>
-            <button className="post-button" onClick={() => { navigate("/home"); }}>Cancel</button>
-          </div>
+        <h1 className="page-title">Create post</h1>
+        <div className="post-type-selector">
+          <a className={`post-type-text ${postType === "text" ? "" : "remove-underline"}`} onClick={() => setPostType("text")}>
+            Text
+          </a>
+          <a className={`post-type-media ${postType === "media" ? "" : "remove-underline"}`} onClick={() => setPostType("media")}>
+            Images & Video
+          </a>
+        </div>
+        {postType === "text" ? (
+          <TextPostForm
+            title={title}
+            setTitle={setTitle}
+            body={body}
+            setBody={setBody} />
+        ) : (
+          <MediaPostForm
+            title={title}
+            setTitle={setTitle}
+            mediaFiles={mediaFiles}
+            setMediaFiles={setMediaFiles}
+            uploadError={uploadError}
+            setUploadError={setUploadError}
+          />
+        )}
+        <div className="submit-and-cancel-buttons">
+          <button className={title && (body || mediaFiles.length > 0) ? "" : "deactive"} onClick={handleSubmit}>Submit</button>
+          <button onClick={() => navigate("/home")}>Cancel</button>
         </div>
       </div>
+      <div className="center-items">
+        <div className="upload-error hide">{uploadError}<button className="close-button" onClick={handleClickErrorCloseButton}><img className="xmark" src={xMarkIcon} /></button></div>
+      </div>
+      <Footer />
     </>
   );
 }
