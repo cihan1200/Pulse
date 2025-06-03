@@ -8,7 +8,6 @@ import Create from "./Create";
 import Comments from "./Comments";
 
 export default function App() {
-
   const router = createBrowserRouter([{
     path: "/home",
     element: (

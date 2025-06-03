@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/posts");
+        const response = await axios.get("https://pulse-0o0k.onrender.com/posts");
         setPosts(response.data);
         setLoading(false);
       } catch (error) {

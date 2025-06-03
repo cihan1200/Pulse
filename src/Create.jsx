@@ -66,7 +66,7 @@ export default function Create() {
           </div>
         );
       }
-      await axios.post("http://localhost:3000/upload", formData, {
+      await axios.post("https://pulse-0o0k.onrender.com/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       navigate("/home");

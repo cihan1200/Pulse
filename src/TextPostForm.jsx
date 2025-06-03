@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export default function TextPostForm({ title, setTitle, body, setBody }) {
   const maxTitleLength = 300;
   const maxBodyLength = 1500;
