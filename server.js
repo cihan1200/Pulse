@@ -22,7 +22,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 app.use(cors({
-  origin: 'https://pulse-0o0k.onrender.com',
+  origin: '*',
   credentials: true,
 }));
 app.use(bodyParser.json());
