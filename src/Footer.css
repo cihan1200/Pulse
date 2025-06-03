@@ -2,12 +2,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 15px;
   font-size: 0.8rem;
   background-color: inherit;
   color: inherit;
   border-top: 1px solid #b197fc;
-  margin-top: 31px; /* This pushes the footer to the bottom */
+  margin-top: 15px;
 }
 
 .pulse-logo {
@@ -17,4 +17,19 @@
 
 .hide {
   display: none;
+}
+
+.footer-text {
+  font-family: "Jaro", sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.8rem;
+}
+
+.footer-date {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.7rem;
 }

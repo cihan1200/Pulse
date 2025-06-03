@@ -6,8 +6,8 @@ export default function Footer() {
 
   return (
     <footer className="footer">
-      <img className="pulse-logo" src={pulseLogo} alt="pulse logo" />
-      <p className="footer-text">© {currentYear} Pulse</p>
+      <p className="footer-text"><img className="pulse-logo" src={pulseLogo} alt="pulse logo" />Pulse</p>
+      <p className="footer-date">&copy; {currentYear}</p>
     </footer>
   );
 }

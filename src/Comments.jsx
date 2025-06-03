@@ -11,8 +11,11 @@ export default function Comments() {
   const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
   const [post, setPost] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [postLoading, setPostLoading] = useState(true);
+  const [commentsLoading, setCommentsLoading] = useState(true);
+  const [userLoading, setUserLoading] = useState(true);
   const [isFocused, setIsFocused] = useState(false);
+  const [user, setUser] = useState({});
   const location = useLocation();
   const postId = location.state.postId || {};
   const textareaRef = useRef(null);
@@ -30,17 +33,36 @@ export default function Comments() {
     const fetchPost = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/posts/${postId}`);
-        setLoading(false);
         setPost(response.data.post);
-        setComments(response.data.post.comments || []);
+        setPostLoading(false);
       } catch (error) {
         console.error("Error fetching post:", error);
       }
     };
+    const fetchComments = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/posts/${postId}/comments`);
+        setComments(response.data.comments || []);
+        setCommentsLoading(false);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await axios.get(`http://localhost:3000/users/${userId}`);
+        setUserLoading(false);
+        setUser(response.data);
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
     fetchPost();
+    fetchComments();
+    fetchCurrentUser();
   }, [postId]);
 
-  if (loading) {
+  if (postLoading || commentsLoading || userLoading) {
     return (
       <div className="loading">
         <div className="spinner"></div>
@@ -69,32 +91,36 @@ export default function Comments() {
   return (
     <>
       <Header />
-      <Post post={post} />
-      <div className="align-center">
-        <div className="organize-elements">
-          <p className="total-comments">Total Comments: {comments.length}</p>
-        </div>
-      </div>
-      <div className="align-center">
-        <div className={`organize-comment-input ${isFocused ? 'focused' : ''}`}>
-          <img className="profile-picture-comments" src={post.postedBy.profilePicture} alt="profile" />
-          <textarea className="new-comment-input" ref={textareaRef} value={newComment} onChange={(e) => setNewComment(e.target.value)} onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder="Add a comment..." rows={1} />
-        </div>
-      </div>
-      <div className="align-center">
-        <div className="cancel-and-submit-buttons">
-          <button className="cancel-button" onClick={handleCommentCancel}>Cancel</button>
-          <button className={`submit-button ${newComment ? 'activate' : ''}`} disabled={!newComment} onClick={handleCommentSubmit}>Comment</button>
-        </div>
-      </div>
-      <div className="align-center">
-        <div className="comments-container">
-          <div className="user">
-            <img className="pp" src={post.postedBy.profilePicture} alt="profile-picture" />
-            <span><span className="username">username</span> • date</span>
+      <div className="page-content">
+        <Post post={post} />
+        <div className="align-center">
+          <div className="organize-elements">
+            <p className="total-comments">Total Comments: {comments.length}</p>
           </div>
-          <p className="comment">comment</p>
         </div>
+        <div className="align-center">
+          <div className={`organize-comment-input ${isFocused ? 'focused' : ''}`}>
+            <img className="profile-picture-comments" src={user.profilePicture} alt="profile" />
+            <textarea className="new-comment-input" ref={textareaRef} value={newComment} onChange={(e) => setNewComment(e.target.value)} onFocus={() => setIsFocused(true)} onBlur={() => setIsFocused(false)} placeholder="Add a comment..." rows={1} />
+          </div>
+        </div>
+        <div className="align-center">
+          <div className="cancel-and-submit-buttons">
+            <button className="cancel-button" onClick={handleCommentCancel}>Cancel</button>
+            <button className={`submit-button ${newComment ? '' : 'deactivate'}`} disabled={!newComment} onClick={handleCommentSubmit}>Comment</button>
+          </div>
+        </div>
+        {comments.map((comment) => (
+          <div className="align-center" key={comment._id}>
+            <div className="comments-container">
+              <div className="user">
+                <img className="pp" src={comment.postedBy.profilePicture} alt="profile-picture" />
+                <span><span className="username">{comment.postedBy.username}</span> • {new Date(comment.createdAt).toLocaleDateString()}</span>
+              </div>
+              <p className="comment">{comment.content}</p>
+            </div>
+          </div>
+        ))}
       </div>
       <Footer />
     </>

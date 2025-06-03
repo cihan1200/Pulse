@@ -198,7 +198,7 @@ export default function Post({ post, index }) {
           </div>
         </button>
         <button className="comments-button" onClick={() => handleClickCommentButton(post._id)}>
-          <span>{posts.find(p => p._id === post._id)?.comments?.length || 0}</span>
+          <span>{post.comments.length || 0}</span>
           <img className="comment-icon" src={commentIcon} alt="comment icon" />
         </button>
       </div>

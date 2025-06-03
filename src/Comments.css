@@ -65,20 +65,18 @@
   border: none;
   color: inherit;
   border-radius: 20px;
-}
-
-.cancel-button:hover {
-  background-color: rgba(177,151,252,0.3);
+  border: 1px solid #b197fc;
 }
 
 .submit-button {
   font-size: 0.7rem;
   padding: 5px 10px;
   font-family: "Montserrat", sans-serif;
-  border: none;
+  border: 1px solid #b197fc;
   color: inherit;
-  background-color: rgba(177,151,252,0.3);
+  background-color: inherit;
   border-radius: 20px;
+  cursor: pointer;
 }
 
 .new-comment-input {
@@ -123,8 +121,8 @@
 .comment {
   font-size: 0.8rem;
   padding-bottom: 15px;
-  border-bottom: 1px solid #b197fc;
   margin-bottom: 0px;
+  margin-top: 10px;
   word-break: break-all;
 }
 
@@ -136,4 +134,9 @@
 
 .username {
   font-weight: bold;
+}
+
+.deactivate {
+  pointer-events: none;
+  opacity: 0.5;
 }

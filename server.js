@@ -158,19 +158,18 @@ app.get("/posts/:postId/comments", async (req, res) => {
   const { postId } = req.params;
 
   try {
-    const post = await Post.findById(postId).populate({
+    const postComments = await Post.findById(postId).select('comments').populate({
       path: "comments",
+      select: "content createdAt",
       populate: {
         path: "postedBy",
-        select: "username profilePicture", // customize what you return
+        select: "email username profilePicture followers about",
       },
     });
-
-    if (!post) {
+    if (!postComments) {
       return res.status(404).json({ message: "Post not found" });
     }
-
-    res.json(post); // send just the comments
+    res.json(postComments);
   } catch (error) {
     console.error("Error fetching comments:", error);
     res.status(500).json({ message: "Server error while fetching comments" });
@@ -191,9 +190,13 @@ app.post('/posts/:postId/new-comment', async (req, res) => {
       postId: postId,
     });
     await newComment.save();
+    const populatedComment = await Comment.populate(newComment, {
+      path: 'postedBy',
+      select: 'email username profilePicture followers about'
+    });
     post.comments.push(newComment._id);
     await post.save();
-    res.status(201).json({ message: "Comment added successfully.", comment: newComment });
+    res.status(201).json({ message: "Comment added successfully.", comment: populatedComment });
   } catch (error) {
     console.error("Error adding comment:", error);
     res.status(500).json({ message: "Server error while adding comment" });
@@ -207,6 +210,18 @@ app.get('/posts/:postId', async (req, res) => {
       return res.status(404).json({ message: "Post not found" });
     }
     res.json({ post });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.get('/users/:userId', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(user);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

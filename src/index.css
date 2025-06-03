@@ -11,6 +11,14 @@ body {
 }
 
 #root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   color: inherit;
   background-color: inherit;
+}
+
+.page-content {
+  flex: 1;
+  padding-top: 70px;
 }

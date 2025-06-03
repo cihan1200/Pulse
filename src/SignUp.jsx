@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import "./SignUp.css";
+import { set } from "mongoose";
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -12,6 +13,7 @@ export default function SignUp() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    localStorage.removeItem("authToken");
     let isValid = true;
     if (!email) {
       setEmailError("Email is required.");
@@ -60,7 +62,24 @@ export default function SignUp() {
 
   };
 
-  const handleGuestLogin = () => {
+  const handleGuestLogin = async (e) => {
+    e.preventDefault();
+    const num = Math.floor(Math.random() * 1000000);
+    localStorage.removeItem("authToken");
+    try {
+      const response = await axios.post('/signup', { email: `guest${num}@example.com`, password: "guestpassword" });
+      if (response.status === 201) {
+        localStorage.setItem("authToken", response.data.token);
+        navigate('/home');
+      }
+    } catch (err) {
+      if (err.response?.status === 400) {
+        setEmailError(err.response.data.message);
+      } else {
+        console.error("An error occurred. Please try again later.");
+      }
+      console.error("Signup error:", err);
+    }
     navigate('/home');
   };
 

@@ -35,7 +35,9 @@ export default function Home() {
     return (
       <>
         <Header />
-        <p className="no-post-text">There is no posts yet.</p>
+        <div className="page-content">
+          <p className="no-post-text">There is no posts yet.</p>
+        </div>
         <Footer />
       </>
     );
@@ -44,15 +46,17 @@ export default function Home() {
   return (
     <>
       <Header />
-      {posts.map((post, index) => {
-        return (
-          <Post
-            key={post._id}
-            index={index}
-            post={post}
-          />
-        );
-      })}
+      <div className="page-content">
+        {posts.map((post, index) => {
+          return (
+            <Post
+              key={post._id}
+              index={index}
+              post={post}
+            />
+          );
+        })}
+      </div>
       <Footer />
     </>
   );

@@ -78,39 +78,41 @@ export default function Create() {
   return (
     <>
       <Header />
-      <div className="wrapper">
-        <h1 className="page-title">Create post</h1>
-        <div className="post-type-selector">
-          <a className={`post-type-text ${postType === "text" ? "" : "remove-underline"}`} onClick={() => setPostType("text")}>
-            Text
-          </a>
-          <a className={`post-type-media ${postType === "media" ? "" : "remove-underline"}`} onClick={() => setPostType("media")}>
-            Images & Video
-          </a>
+      <div className="page-content">
+        <div className="wrapper">
+          <h1 className="page-title">Create post</h1>
+          <div className="post-type-selector">
+            <a className={`post-type-text ${postType === "text" ? "" : "remove-underline"}`} onClick={() => setPostType("text")}>
+              Text
+            </a>
+            <a className={`post-type-media ${postType === "media" ? "" : "remove-underline"}`} onClick={() => setPostType("media")}>
+              Images & Video
+            </a>
+          </div>
+          {postType === "text" ? (
+            <TextPostForm
+              title={title}
+              setTitle={setTitle}
+              body={body}
+              setBody={setBody} />
+          ) : (
+            <MediaPostForm
+              title={title}
+              setTitle={setTitle}
+              mediaFiles={mediaFiles}
+              setMediaFiles={setMediaFiles}
+              uploadError={uploadError}
+              setUploadError={setUploadError}
+            />
+          )}
+          <div className="submit-and-cancel-buttons">
+            <button className={title && (body || mediaFiles.length > 0) ? "" : "deactive"} onClick={handleSubmit}>Submit</button>
+            <button onClick={() => navigate("/home")}>Cancel</button>
+          </div>
         </div>
-        {postType === "text" ? (
-          <TextPostForm
-            title={title}
-            setTitle={setTitle}
-            body={body}
-            setBody={setBody} />
-        ) : (
-          <MediaPostForm
-            title={title}
-            setTitle={setTitle}
-            mediaFiles={mediaFiles}
-            setMediaFiles={setMediaFiles}
-            uploadError={uploadError}
-            setUploadError={setUploadError}
-          />
-        )}
-        <div className="submit-and-cancel-buttons">
-          <button className={title && (body || mediaFiles.length > 0) ? "" : "deactive"} onClick={handleSubmit}>Submit</button>
-          <button onClick={() => navigate("/home")}>Cancel</button>
+        <div className="center-items">
+          <div className="upload-error hide">{uploadError}<button className="close-button" onClick={handleClickErrorCloseButton}><img className="xmark" src={xMarkIcon} /></button></div>
         </div>
-      </div>
-      <div className="center-items">
-        <div className="upload-error hide">{uploadError}<button className="close-button" onClick={handleClickErrorCloseButton}><img className="xmark" src={xMarkIcon} /></button></div>
       </div>
       <Footer />
     </>

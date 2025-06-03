@@ -4,7 +4,9 @@
   background-color: inherit;
   color: inherit;
   border-bottom: 1px solid #b197fc;
-  position: sticky;
+  position: fixed;
+  left: 0;
+  right: 0;
   top: 0;
   display: flex;
   flex-direction: row;

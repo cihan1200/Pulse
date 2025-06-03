@@ -6,7 +6,6 @@ import PrivateRoute from "./PrivateRoute";
 import Login from "./Login";
 import Create from "./Create";
 import Comments from "./Comments";
-import Test from "./test";
 
 export default function App() {
 
@@ -42,14 +41,6 @@ export default function App() {
       </PrivateRoute>
     )
   },
-  {
-    path: "/test",
-    element: (
-      <PrivateRoute>
-        <Test />
-      </PrivateRoute>
-    )
-  }
   ]);
 
   return (
