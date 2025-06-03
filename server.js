@@ -53,7 +53,7 @@ app.post('/upload', upload.array('media'), async (req, res) => {
   const { userId, title, body, type } = req.body;
   let mediaUrls = [];
   if (req.files) {
-    mediaUrls = req.files.map(file => `localhost:3000/uploads/${file.filename}`);
+    mediaUrls = req.files.map(file => `https://pulse-0o0k.onrender.com/public/uploads/${file.filename}`);
   }
   try {
     const newPost = new Post({

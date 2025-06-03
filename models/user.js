@@ -13,7 +13,7 @@ const userSchema = new mongoose.Schema({
   },
   profilePicture: {
     type: String,
-    default: 'http://localhost:3000/user-icon.svg'
+    default: 'https://pulse-0o0k.onrender.com/public/user-icon.svg'
   },
   username: {
     type: String,
