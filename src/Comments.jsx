@@ -21,6 +21,7 @@ export default function Comments() {
   const textareaRef = useRef(null);
   const token = localStorage.getItem("authToken");
   const userId = token ? jwtDecode(token).id : null;
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -32,7 +33,7 @@ export default function Comments() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`https://pulse-0o0k.onrender.com/posts/${postId}`);
+        const response = await axios.get(`${API_URL}/posts/${postId}`);
         setPost(response.data.post);
         setPostLoading(false);
       } catch (error) {
@@ -41,7 +42,7 @@ export default function Comments() {
     };
     const fetchComments = async () => {
       try {
-        const response = await axios.get(`https://pulse-0o0k.onrender.com/posts/${postId}/comments`);
+        const response = await axios.get(`${API_URL}/posts/${postId}/comments`);
         setComments(response.data.comments || []);
         setCommentsLoading(false);
       } catch (error) {
@@ -50,7 +51,7 @@ export default function Comments() {
     };
     const fetchCurrentUser = async () => {
       try {
-        const response = await axios.get(`https://pulse-0o0k.onrender.com/users/${userId}`);
+        const response = await axios.get(`${API_URL}/users/${userId}`);
         setUserLoading(false);
         setUser(response.data);
       } catch (error) {
@@ -77,7 +78,7 @@ export default function Comments() {
   const handleCommentSubmit = async () => {
     if (!newComment) return;
     try {
-      const response = await axios.post(`https://pulse-0o0k.onrender.com/posts/${postId}/new-comment`, {
+      const response = await axios.post(`${API_URL}/posts/${postId}/new-comment`, {
         comment: newComment,
         userId: userId,
       });

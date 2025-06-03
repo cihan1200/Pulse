@@ -8,11 +8,12 @@ import Footer from "./Footer";
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get("https://pulse-0o0k.onrender.com/posts");
+        const response = await axios.get(`${API_URL}/posts`);
         setPosts(response.data);
         setLoading(false);
       } catch (error) {

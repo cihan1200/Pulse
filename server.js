@@ -16,14 +16,19 @@ import Comment from './models/comment.js';
 dotenv.config();
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
+const API_URL = import.meta.env.VITE_API_URL;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+import cors from 'cors';
 app.use(cors({
-  origin: '*',
-  credentials: true,
+  origin: [
+    'http://localhost:5173',
+    'https://pulse-0o0k.onrender.com'
+  ],
+  credentials: true
 }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -53,7 +58,7 @@ app.post('/upload', upload.array('media'), async (req, res) => {
   const { userId, title, body, type } = req.body;
   let mediaUrls = [];
   if (req.files) {
-    mediaUrls = req.files.map(file => `https://pulse-0o0k.onrender.com/public/uploads/${file.filename}`);
+    mediaUrls = req.files.map(file => `${API_URL}/public/uploads/${file.filename}`);
   }
   try {
     const newPost = new Post({

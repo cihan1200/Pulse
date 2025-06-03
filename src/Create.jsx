@@ -1,12 +1,9 @@
 import "./Create.css";
-
 import xMarkIcon from "./assets/xmark.svg";
-
 import Header from "./Header";
 import Footer from "./Footer";
 import TextPostForm from "./TextPostForm";
 import MediaPostForm from "./MediaPostForm";
-
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -19,11 +16,9 @@ export default function Create() {
   const [body, setBody] = useState("");
   const [uploadError, setUploadError] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const API_URL = import.meta.env.VITE_API_URL;
   const timeoutRef = useRef(null);
-
   const navigate = useNavigate();
-
   const rootDiv = document.getElementById("root");
   rootDiv.style.height = "100vh";
 
@@ -66,7 +61,7 @@ export default function Create() {
           </div>
         );
       }
-      await axios.post("https://pulse-0o0k.onrender.com/upload", formData, {
+      await axios.post(`${API_URL}/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       navigate("/home");

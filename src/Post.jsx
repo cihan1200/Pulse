@@ -20,6 +20,7 @@ export default function Post({ post, index }) {
   const userPanelRef = useRef(null);
   const [mediaIndex, setMediaIndex] = useState(0);
   const medias = post.media || [];
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const postDividers = document.querySelectorAll('.post-divider');
@@ -87,7 +88,7 @@ export default function Post({ post, index }) {
       })
     );
     try {
-      const response = await fetch(`https://pulse-0o0k.onrender.com/posts/${postId}/like`, {
+      const response = await fetch(`${API_URL}/posts/${postId}/like`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),
@@ -122,7 +123,7 @@ export default function Post({ post, index }) {
       })
     );
     try {
-      const response = await fetch(`https://pulse-0o0k.onrender.com/posts/${postId}/dislike`, {
+      const response = await fetch(`${API_URL}/posts/${postId}/dislike`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),
