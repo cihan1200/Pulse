@@ -33,7 +33,7 @@ export default function Comments() {
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await axios.get(`${API_URL}/posts/${postId}`);
+        const response = await axios.get(`https://pulse-0o0k.onrender.com/posts/${postId}`);
         setPost(response.data.post);
         setPostLoading(false);
       } catch (error) {
@@ -42,7 +42,7 @@ export default function Comments() {
     };
     const fetchComments = async () => {
       try {
-        const response = await axios.get(`${API_URL}/posts/${postId}/comments`);
+        const response = await axios.get(`https://pulse-0o0k.onrender.com/posts/${postId}/comments`);
         setComments(response.data.comments || []);
         setCommentsLoading(false);
       } catch (error) {
@@ -51,7 +51,7 @@ export default function Comments() {
     };
     const fetchCurrentUser = async () => {
       try {
-        const response = await axios.get(`${API_URL}/users/${userId}`);
+        const response = await axios.get(`https://pulse-0o0k.onrender.com/users/${userId}`);
         setUserLoading(false);
         setUser(response.data);
       } catch (error) {
@@ -78,7 +78,7 @@ export default function Comments() {
   const handleCommentSubmit = async () => {
     if (!newComment) return;
     try {
-      const response = await axios.post(`${API_URL}/posts/${postId}/new-comment`, {
+      const response = await axios.post(`https://pulse-0o0k.onrender.com/posts/${postId}/new-comment`, {
         comment: newComment,
         userId: userId,
       });

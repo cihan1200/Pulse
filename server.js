@@ -15,12 +15,25 @@ import Comment from './models/comment.js';
 
 dotenv.config();
 
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
 const app = express();
 const port = process.env.PORT || 3000;
 const API_URL = process.env.VITE_API_URL;
-
+const uploadDir = path.join(__dirname, "public", "uploads");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+const storage = multer.diskStorage({
+  destination: (_req, _file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (_req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+const upload = multer({ storage });
 
 app.use(cors({
   origin: [
@@ -33,31 +46,13 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'dist')));
 
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log("Database connected."))
-  .catch((err) => console.error("MongoDB connection error:", err));
-
-const uploadDir = path.join(__dirname, "public", "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
-  },
-});
-
-const upload = multer({ storage });
+mongoose.connect(process.env.MONGODB_URI).then(() => console.log("Database connected.")).catch((err) => console.error("MongoDB connection error:", err));
 
 app.post('/upload', upload.array('media'), async (req, res) => {
   const { userId, title, body, type } = req.body;
   let mediaUrls = [];
   if (req.files) {
-    mediaUrls = req.files.map(file => `${API_URL}/uploads/${file.filename}`);
+    mediaUrls = req.files.map(file => `https://pulse-0o0k.onrender.com/uploads/${file.filename}`);
   }
   try {
     const newPost = new Post({

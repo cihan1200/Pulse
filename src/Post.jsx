@@ -88,7 +88,7 @@ export default function Post({ post, index }) {
       })
     );
     try {
-      const response = await fetch(`${API_URL}/posts/${postId}/like`, {
+      const response = await fetch(`https://pulse-0o0k.onrender.com/posts/${postId}/like`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),
@@ -123,7 +123,7 @@ export default function Post({ post, index }) {
       })
     );
     try {
-      const response = await fetch(`${API_URL}/posts/${postId}/dislike`, {
+      const response = await fetch(`https://pulse-0o0k.onrender.com/posts/${postId}/dislike`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),
