@@ -15,16 +15,17 @@ import Comment from './models/comment.js';
 
 dotenv.config();
 
+const app = express();
+const port = process.env.PORT || 3000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const uploadDir = path.join(__dirname, "public", "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-const app = express();
-const port = process.env.PORT || 3000;
 const API_URL = process.env.VITE_API_URL;
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => {
     cb(null, uploadDir);
