@@ -21,4 +21,5 @@ body {
 .page-content {
   flex: 1;
   padding-top: 70px;
+  background-color: inherit;
 }
