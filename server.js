@@ -17,12 +17,11 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
-const API_URL = import.meta.env.VITE_API_URL;
+const API_URL = process.env.VITE_API_URL;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-import cors from 'cors';
 app.use(cors({
   origin: [
     'http://localhost:5173',
@@ -58,7 +57,7 @@ app.post('/upload', upload.array('media'), async (req, res) => {
   const { userId, title, body, type } = req.body;
   let mediaUrls = [];
   if (req.files) {
-    mediaUrls = req.files.map(file => `${API_URL}/public/uploads/${file.filename}`);
+    mediaUrls = req.files.map(file => `${API_URL}/uploads/${file.filename}`);
   }
   try {
     const newPost = new Post({

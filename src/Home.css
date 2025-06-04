@@ -22,7 +22,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 540px;
+  height: 535px;
 }
 
 @keyframes spin {

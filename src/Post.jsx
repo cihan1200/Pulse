@@ -172,9 +172,9 @@ export default function Post({ post, index }) {
       <p className={`post-text ${post.type === "text" ? "" : "hide"}`}>{post.body}</p>
       <div className={`post-media-container ${post.type === "media" ? "" : "hide"}`}>
         {medias.length > 0 && (medias[mediaIndex].includes("mp4") ?
-          (<video className="video" src={`http://${medias[mediaIndex]}`} controls loading="lazy" alt="Post Media" />)
+          (<video className="video" src={`${medias[mediaIndex]}`} controls loading="lazy" alt="Post Media" />)
           :
-          (<img className="image" src={`http://${medias[mediaIndex]}`} loading="lazy" alt="Post Media" />)
+          (<img className="image" src={`${medias[mediaIndex]}`} loading="lazy" alt="Post Media" />)
         )}
         {medias.length > 1 && (
           <div className="media-navigation">

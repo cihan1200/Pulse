@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+
+dotenv.config();
+const url = process.env.VITE_API_URL;
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -13,7 +17,7 @@ const userSchema = new mongoose.Schema({
   },
   profilePicture: {
     type: String,
-    default: 'https://pulse-0o0k.onrender.com/public/user-icon.svg'
+    default: `${url}/user-icon.svg`
   },
   username: {
     type: String,
