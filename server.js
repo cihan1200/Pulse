@@ -15,6 +15,7 @@ import Comment from './models/comment.js';
 
 dotenv.config();
 
+const uploadDir = path.join(__dirname, "public", "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -22,7 +23,6 @@ if (!fs.existsSync(uploadDir)) {
 const app = express();
 const port = process.env.PORT || 3000;
 const API_URL = process.env.VITE_API_URL;
-const uploadDir = path.join(__dirname, "public", "uploads");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const storage = multer.diskStorage({
