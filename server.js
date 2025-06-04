@@ -12,6 +12,8 @@ import multer from 'multer';
 import fs from 'fs';
 import Post from './models/post.js';
 import Comment from './models/comment.js';
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
 dotenv.config();
 
@@ -20,18 +22,17 @@ const port = process.env.PORT || 3000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const uploadDir = path.join(__dirname, "public", "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const API_URL = process.env.VITE_API_URL;
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (_req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'pulse_uploads',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'mp4', 'webm', 'gif'],
+    public_id: (req, file) => `${Date.now()}-${file.originalname}`,
   },
 });
 const upload = multer({ storage });
@@ -44,7 +45,6 @@ app.use(cors({
   credentials: true
 }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'dist')));
 
 mongoose.connect(process.env.MONGODB_URI).then(() => console.log("Database connected.")).catch((err) => console.error("MongoDB connection error:", err));
@@ -52,8 +52,8 @@ mongoose.connect(process.env.MONGODB_URI).then(() => console.log("Database conne
 app.post('/upload', upload.array('media'), async (req, res) => {
   const { userId, title, body, type } = req.body;
   let mediaUrls = [];
-  if (req.files) {
-    mediaUrls = req.files.map(file => `https://pulse-0o0k.onrender.com/uploads/${file.filename}`);
+  if (req.files && req.files.length > 0) {
+    mediaUrls = req.files.map(file => file.path);
   }
   try {
     const newPost = new Post({

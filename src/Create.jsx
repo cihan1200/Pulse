@@ -41,7 +41,6 @@ export default function Create() {
   };
 
   const handleSubmit = async () => {
-
     const token = localStorage.getItem("authToken");
     const userId = token ? jwtDecode(token).id : null;
     const formData = new FormData();
