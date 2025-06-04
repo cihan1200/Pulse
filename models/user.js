@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const userSchema = new mongoose.Schema({
   email: {
@@ -13,7 +16,7 @@ const userSchema = new mongoose.Schema({
   },
   profilePicture: {
     type: String,
-    default: "https://pulse-0o0k.onrender.com/user-icon.svg"
+    default: process.env.DEFAULT_PROFILE_PICTURE
   },
   username: {
     type: String,
