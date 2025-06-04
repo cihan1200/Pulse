@@ -9,7 +9,6 @@ import cors from 'cors';
 import User from './models/user.js';
 import dotenv from 'dotenv';
 import multer from 'multer';
-import fs from 'fs';
 import Post from './models/post.js';
 import Comment from './models/comment.js';
 import { v2 as cloudinary } from 'cloudinary';
@@ -230,7 +229,7 @@ app.get('/users/:userId', async (req, res) => {
   }
 });
 
-app.get('*', (req, res) => {
+app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
