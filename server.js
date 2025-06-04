@@ -27,11 +27,17 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'pulse_uploads',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'mp4', 'webm', 'gif'],
-    public_id: (req, file) => `${Date.now()}-${file.originalname}`,
+  cloudinary,
+  params: async (req, file) => {
+    const isVideo = file.mimetype.startsWith('video/');
+    return {
+      folder: 'videos',
+      resource_type: isVideo ? 'video' : 'image',
+      public_id: Date.now().toString(),
+      use_filename: true,
+      unique_filename: true,
+      overwrite: true
+    };
   },
 });
 const upload = multer({ storage });
