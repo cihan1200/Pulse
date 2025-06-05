@@ -42,13 +42,7 @@ const storage = new CloudinaryStorage({
 });
 const upload = multer({ storage });
 
-app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    'https://pulse-0o0k.onrender.com'
-  ],
-  credentials: true
-}));
+app.use(cors({ origin: ['http://localhost:5173', 'https://pulse-0o0k.onrender.com'], credentials: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'dist')));
 

@@ -8,7 +8,6 @@ import Footer from "./Footer";
 export default function Home() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -23,6 +22,14 @@ export default function Home() {
     };
     fetchPosts();
   }, []);
+
+  const updatePost = (postId, updatedFields) => {
+    setPosts(prevPosts =>
+      prevPosts.map(post =>
+        post._id === postId ? { ...post, ...updatedFields } : post
+      )
+    );
+  };
 
   if (loading) {
     return (
@@ -52,8 +59,9 @@ export default function Home() {
           return (
             <Post
               key={post._id}
-              index={index}
               post={post}
+              updatePost={updatePost}
+              isLastPost={index === posts.length - 1}
             />
           );
         })}

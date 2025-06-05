@@ -7,12 +7,12 @@ import thumbsDownIcon from "./assets/thumbs-down-icon.svg";
 import commentIcon from "./assets/comment-icon.svg";
 import prevMediaButtonIcon from "./assets/prev-media-button-icon.svg";
 import nextMediaButtonIcon from "./assets/next-media-button-icon.svg";
+import axios from "axios";
 
-
-export default function Post({ post, index }) {
+export default function Post({ post, updatePost, isLastPost }) {
   const [likesHovered, setLikesHovered] = useState({});
   const [dislikesHovered, setDislikesHovered] = useState({});
-  const [posts, setPosts] = useState([]);
+  const [isInteracting, setIsInteracting] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("authToken");
   const userId = token ? jwtDecode(token).id : null;
@@ -20,13 +20,6 @@ export default function Post({ post, index }) {
   const userPanelRef = useRef(null);
   const [mediaIndex, setMediaIndex] = useState(0);
   const medias = post.media || [];
-  const API_URL = import.meta.env.VITE_API_URL;
-
-  useEffect(() => {
-    const postDividers = document.querySelectorAll('.post-divider');
-    const lastPostDivider = postDividers[postDividers.length - 1];
-    lastPostDivider.classList.add('hide');
-  });
 
   const handleMouseEnterUserLink = () => {
     clearTimeout(timeoutRef.current);
@@ -72,72 +65,64 @@ export default function Post({ post, index }) {
   };
 
   const handleClickPostLikeButton = async (postId) => {
-    if (!userId) {
-      console.error("User ID not found");
-      return;
-    }
-    setPosts(prevPosts =>
-      prevPosts.map(post => {
-        if (post._id !== postId) return post;
-        const hasLiked = post.likes?.includes(userId);
-        const updatedLikes = hasLiked
-          ? post.likes?.filter(id => id !== userId) || []
-          : [...(post.likes || []), userId];
-        const updatedDislikes = post.dislikes?.filter(id => id !== userId) || [];
-        return { ...post, likes: updatedLikes, dislikes: updatedDislikes };
-      })
-    );
+    if (isInteracting) return;
+    setIsInteracting(true);
+
+    // Backup current state for rollback
+    const prevLikes = [...post.likes];
+    const prevDislikes = [...post.dislikes];
+
+    // Optimistic update
+    const alreadyLiked = post.likes.includes(userId);
+    const newLikes = alreadyLiked
+      ? post.likes.filter(id => id !== userId)
+      : [...post.likes, userId];
+    const newDislikes = post.dislikes.filter(id => id !== userId);
+    updatePost(postId, { likes: newLikes, dislikes: newDislikes });
+
     try {
-      const response = await fetch(`https://pulse-0o0k.onrender.com/posts/${postId}/like`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
+      const response = await axios.post(`https://pulse-0o0k.onrender.com/posts/${postId}/like`, { userId });
+      updatePost(postId, {
+        likes: response.data.likes,
+        dislikes: response.data.dislikes
       });
-      const data = await response.json();
-      setPosts(prevPosts =>
-        prevPosts.map(post =>
-          post._id === postId
-            ? { ...post, likes: data.likes, dislikes: data.dislikes }
-            : post
-        )
-      );
     } catch (error) {
       console.error("Error liking post:", error);
+      // Rollback to previous state
+      updatePost(postId, { likes: prevLikes, dislikes: prevDislikes });
+    } finally {
+      setIsInteracting(false);
     }
   };
 
   const handleClickPostDislikeButton = async (postId) => {
-    if (!userId) {
-      console.error("User ID not found");
-      return;
-    }
-    setPosts(prevPosts =>
-      prevPosts.map(post => {
-        if (post._id !== postId) return post;
-        const hasDisliked = post.dislikes?.includes(userId);
-        const updatedDislikes = hasDisliked
-          ? post.dislikes?.filter(id => id !== userId) || []
-          : [...(post.dislikes || []), userId];
-        const updatedLikes = post.likes?.filter(id => id !== userId) || [];
-        return { ...post, likes: updatedLikes, dislikes: updatedDislikes };
-      })
-    );
+    if (isInteracting) return;
+    setIsInteracting(true);
+
+    // Backup current state for rollback
+    const prevLikes = [...post.likes];
+    const prevDislikes = [...post.dislikes];
+
+    // Optimistic update
+    const alreadyDisliked = post.dislikes.includes(userId);
+    const newDislikes = alreadyDisliked
+      ? post.dislikes.filter(id => id !== userId)
+      : [...post.dislikes, userId];
+    const newLikes = post.likes.filter(id => id !== userId);
+    updatePost(postId, { likes: newLikes, dislikes: newDislikes });
+
     try {
-      const response = await fetch(`https://pulse-0o0k.onrender.com/posts/${postId}/dislike`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId }),
+      const response = await axios.post(`https://pulse-0o0k.onrender.com/posts/${postId}/dislike`, { userId });
+      updatePost(postId, {
+        likes: response.data.likes,
+        dislikes: response.data.dislikes
       });
-      const data = await response.json();
-      setPosts(prevPosts =>
-        prevPosts.map(post =>
-          post._id === postId
-            ? { ...post, likes: data.likes, dislikes: data.dislikes }
-            : post
-        )
-      );
     } catch (error) {
       console.error("Error disliking post:", error);
+      // Rollback to previous state
+      updatePost(postId, { likes: prevLikes, dislikes: prevDislikes });
+    } finally {
+      setIsInteracting(false);
     }
   };
 
@@ -190,11 +175,11 @@ export default function Post({ post, index }) {
       <div className="post-buttons-container">
         <button className={`feedback-buttons ${likesHovered[post._id] ? 'hover-likes' : ''} ${dislikesHovered[post._id] ? 'hover-dislikes' : ''}`}>
           <div className="likes-container" onClick={() => handleClickPostLikeButton(post._id)} onMouseEnter={() => handleMouseEnterLikesButton(post._id)} onMouseLeave={() => handleMouseLeaveLikesButton(post._id)}>
-            <span>{posts.find(p => p._id === post._id)?.likes?.length || 0}</span>
+            <span>{post.likes.length || 0}</span>
             <img className="thumbs-up-icon" src={thumbsUpIcon} alt="Like" />
           </div>
           <div className="dislikes-container" onClick={() => handleClickPostDislikeButton(post._id)} onMouseEnter={() => handleMouseEnterDislikesButton(post._id)} onMouseLeave={() => handleMouseLeaveDislikesButton(post._id)}>
-            <span>{posts.find(p => p._id === post._id)?.dislikes?.length || 0}</span>
+            <span>{post.dislikes.length || 0}</span>
             <img className="thumbs-down-icon" src={thumbsDownIcon} alt="Dislike" />
           </div>
         </button>
@@ -203,7 +188,7 @@ export default function Post({ post, index }) {
           <img className="comment-icon" src={commentIcon} alt="comment icon" />
         </button>
       </div>
-      {index !== posts.length - 1 && <hr className="post-divider" />}
+      {!isLastPost && <hr className="post-divider" />}
     </div>
   );
 }
