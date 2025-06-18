@@ -1,4 +1,3 @@
-import "./Footer.css";
 import pulseLogo from "./assets/pulse-logo.svg";
 
 export default function Footer() {

@@ -1,4 +1,3 @@
-import "./Create.css";
 import xMarkIcon from "./assets/xmark.svg";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -16,7 +15,6 @@ export default function Create() {
   const [body, setBody] = useState("");
   const [uploadError, setUploadError] = useState("");
   const [loading, setLoading] = useState(false);
-  const API_URL = import.meta.env.VITE_API_URL;
   const timeoutRef = useRef(null);
   const navigate = useNavigate();
   const rootDiv = document.getElementById("root");
@@ -74,7 +72,7 @@ export default function Create() {
       <Header />
       <div className="page-content">
         <div className="wrapper">
-          <h1 className="page-title">Create post</h1>
+          <h1 className="page-title">Create Post</h1>
           <div className="post-type-selector">
             <a className={`post-type-text ${postType === "text" ? "" : "remove-underline"}`} onClick={() => setPostType("text")}>
               Text

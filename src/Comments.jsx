@@ -1,4 +1,3 @@
-import "./Comments.css";
 import { useLocation } from 'react-router-dom';
 import { useEffect, useState, useRef } from 'react';
 import { jwtDecode } from "jwt-decode";
@@ -21,7 +20,6 @@ export default function Comments() {
   const textareaRef = useRef(null);
   const token = localStorage.getItem("authToken");
   const userId = token ? jwtDecode(token).id : null;
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (textareaRef.current) {

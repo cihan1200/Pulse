@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import "./Home.css";
 import Header from "./Header";
 import Post from "./Post";
 import Footer from "./Footer";

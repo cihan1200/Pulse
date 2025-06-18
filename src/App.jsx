@@ -1,4 +1,3 @@
-import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./Home";
 import SignUp from "./SignUp";
@@ -6,6 +5,7 @@ import PrivateRoute from "./PrivateRoute";
 import Login from "./Login";
 import Create from "./Create";
 import Comments from "./Comments";
+import Profile from "./Profile";
 
 export default function App() {
   const router = createBrowserRouter([{
@@ -40,6 +40,14 @@ export default function App() {
       </PrivateRoute>
     )
   },
+  {
+    path: "/profile",
+    element: (
+      <PrivateRoute>
+        <Profile />
+      </PrivateRoute>
+    )
+  }
   ]);
 
   return (

@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import "./SignUp.css";
-import { set } from "mongoose";
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -58,10 +56,6 @@ export default function SignUp() {
     }
   };
 
-  const handleGoogleSignIn = () => {
-
-  };
-
   const handleGuestLogin = async (e) => {
     e.preventDefault();
     const num = Math.floor(Math.random() * 1000000);
@@ -94,9 +88,8 @@ export default function SignUp() {
           {passwordError && <p className="warning-text">{passwordError}</p>}
           <button className="signup-button" type="submit">Sign Up</button>
           <div className="divider">OR</div>
-          <button className="google-button" type="button" onClick={handleGoogleSignIn}>Continue with Google</button>
           <button className="login-button" type="button" onClick={() => { navigate("/login"); }}>Login</button>
-          <button className="login-button" type="button" onClick={handleGuestLogin}>Browse as guest</button>
+          <button className="guest-login-button" type="button" onClick={handleGuestLogin}>Browse as guest</button>
         </form>
       </div>
     </>

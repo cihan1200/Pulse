@@ -3,7 +3,6 @@ import nextMediaButtonIcon from "./assets/next-media-button-icon.svg";
 import prevMediaButtonIcon from "./assets/prev-media-button-icon.svg";
 import plusIcon from "./assets/plus-icon.svg";
 import deleteMediaButtonIcon from "./assets/delete-media-button-icon.svg";
-
 import { useState, useEffect } from "react";
 
 export default function MediaPostForm({ setUploadError, title, setTitle, mediaFiles, setMediaFiles }) {

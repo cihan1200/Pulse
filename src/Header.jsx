@@ -1,4 +1,3 @@
-import "./Header.css";
 import pulseLogo from "./assets/pulse-logo.svg";
 import plusIcon from "./assets/plus-icon.svg";
 import { useState, useEffect, useRef } from "react";
