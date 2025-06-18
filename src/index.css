@@ -1198,3 +1198,132 @@ nav button:first-of-type {
   margin-bottom: 0;
 }
 
+.profile-picture-container {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  width: 95%;
+  max-width: 715px;
+  gap: 20px;
+}
+
+.profile-picture-label {
+  font-size: larger;
+  font-weight: bold;
+  color: inherit;
+}
+
+.profile-picture-settings {
+  border-radius: 50%;
+  height: 2.3em;
+  width: 2.3em;
+}
+
+.settings-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: calc(100vh - 70px);
+  background-color: inherit;
+  flex-direction: column;
+}
+
+.user-name-container {
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  width: 95%;
+  max-width: 715px;
+  gap: 20px;
+}
+
+.user-name-label {
+  font-size: larger;
+  font-weight: bold;
+  color: inherit;
+}
+
+.user-name-settings {
+  font-size: large;
+  font-weight: normal;
+  color: inherit;
+}
+
+.about-container {
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  width: 95%;
+  max-width: 715px;
+  gap: 20px;
+}
+
+.about-label {
+  font-size: larger;
+  font-weight: bold;
+  color: inherit;
+}
+
+.about-settings {
+  font-size: large;
+  font-weight: normal;
+  color: inherit;
+}
+
+.save-and-cancel-buttons-container {
+  margin-top: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  width: 95%;
+  max-width: 715px;
+  gap: 20px;
+}
+
+.save {
+  font-family: "Raleway", sans-serif;
+  font-size: 0.8rem;
+  height: 35px;
+  background-color: #b197fc;
+  color: inherit;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  padding: 0px 15px;
+}
+
+.save:hover {
+  background-color: #9775fa;
+}
+
+.cancel {
+  font-family: "Raleway", sans-serif;
+  font-size: 0.8rem;
+  height: 35px;
+  background-color: #b197fc;
+  color: inherit;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  padding: 0px 10px;
+}
+
+.cancel:hover {
+  background-color: #9775fa;
+}
+
+.edit-icon {
+  height: 0.8em;
+  width: 0.8em;
+}
+
+.edit-button {
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+  margin-top: 8px;
+}

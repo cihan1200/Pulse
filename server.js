@@ -229,6 +229,26 @@ app.get('/users/:userId', async (req, res) => {
   }
 });
 
+app.put('/users/:userId/profile-picture', upload.single('profilePicture'), async (req, res) => {
+  const { userId } = req.params;
+  const { file } = req;
+  if (!file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.profilePicture = file.path;
+    await user.save();
+    res.json({ message: "Profile picture updated successfully", profilePicture: user.profilePicture });
+  } catch (error) {
+    console.error("Error updating profile picture:", error);
+    res.status(500).json({ message: "Server error while updating profile picture" });
+  }
+});
+
 app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
