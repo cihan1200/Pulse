@@ -12,6 +12,7 @@ export default function Profile() {
   const [userName, setUserName] = useState("");
   const [newUserName, setNewUserName] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
+  const [profilePictureFile, setProfilePictureFile] = useState(null);
   const [trigger, setTrigger] = useState(false);
   const [about, setAbout] = useState("");
   const [newAbout, setNewAbout] = useState("");
@@ -50,19 +51,10 @@ export default function Profile() {
     fileInput.onchange = async (event) => {
       const file = event.target.files[0];
       if (file) {
-        setLoading(true);
-        const formData = new FormData();
-        formData.append("profilePicture", file);
-        try {
-          //await axios.put(`https://pulse-0o0k.onrender.com/users/${userId}/profile-picture`, formData);
-          setProfilePicture(URL.createObjectURL(file));
-          saveButton.classList.remove("deactive");
-          cancelButton.classList.remove("deactive");
-        } catch (error) {
-          console.error("Error updating profile picture:", error);
-        } finally {
-          setLoading(false);
-        }
+        setProfilePictureFile(file); // Store the file
+        setProfilePicture(URL.createObjectURL(file)); // For preview
+        saveButton.classList.remove("deactive");
+        cancelButton.classList.remove("deactive");
       }
     };
     fileInput.click();
@@ -84,26 +76,50 @@ export default function Profile() {
 
   const cancelChanges = () => {
     setLoading(true);
-    if (trigger === true) {
-      setTrigger(false);
-    } else {
-      setTrigger(true);
-    }
+    setTrigger(prev => !prev);
   };
 
   const saveChanges = async () => {
-    const saveButtton = document.querySelector(".save");
-    if (saveButtton.classList.contains("deactive")) {
+    const saveButton = document.querySelector(".save");
+    if (saveButton.classList.contains("deactive")) {
       return;
-    } else if (newUserName !== "") {
+    }
+
+    const requests = [];
+
+    // Check if username actually changed
+    if (newUserName.trim() !== "") {
+      requests.push(
+        axios.put(`https://pulse-0o0k.onrender.com/users/${userId}/username`, { newUsername: newUserName })
+      );
+    }
+
+    // Check if about actually changed
+    if (newAbout.trim() !== "") {
+      requests.push(
+        axios.put(`https://pulse-0o0k.onrender.com/users/${userId}/about`, { newAbout: newAbout })
+      );
+    }
+
+    // Check if profile picture actually changed
+    if (profilePictureFile) { // If a new picture is selected
+      const formData = new FormData();
+      formData.append("profilePicture", profilePictureFile);
+      requests.push(
+        axios.put(`https://pulse-0o0k.onrender.com/users/${userId}/profile-picture`, formData)
+      );
+    }
+
+    if (requests.length === 0) return; // Nothing changed, no need to send requests
+
+    try {
       setLoading(true);
-      console.log(newUserName);
-      await axios.put(`https://pulse-0o0k.onrender.com/users/${userId}/username`, { newUsername: newUserName });
-      if (trigger === true) {
-        setTrigger(false);
-      } else {
-        setTrigger(true);
-      }
+      await Promise.all(requests);
+      setTrigger(prev => !prev);
+    } catch (error) {
+      console.error("Error saving changes:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -188,4 +204,4 @@ export default function Profile() {
       <Footer />
     </>
   );
-}
+};
