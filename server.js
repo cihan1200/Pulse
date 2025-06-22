@@ -249,6 +249,40 @@ app.put('/users/:userId/profile-picture', upload.single('profilePicture'), async
   }
 });
 
+app.put('/users/:userId/username', async (req, res) => {
+  const { userId } = req.params;
+  const { newUsername } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.username = newUsername;
+    await user.save();
+    res.json({ message: "Username updated successfully", username: user.username });
+  } catch (error) {
+    console.error("Error updating username:", error);
+    res.status(500).json({ message: "Server error while updating username" });
+  }
+});
+
+app.put('/users/:userId/about', async (req, res) => {
+  const { userId } = req.params;
+  const { newAbout } = req.body;
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.about = newAbout;
+    await user.save();
+    res.json({ message: "About section updated successfully", about: user.about });
+  } catch (error) {
+    console.error("Error updating about section:", error);
+    res.status(500).json({ message: "Server error while updating about section" });
+  }
+});
+
 app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
