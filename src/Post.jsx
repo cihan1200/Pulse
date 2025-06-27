@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import thumbsUpIcon from "./assets/thumbs-up-icon.svg";
@@ -135,7 +135,7 @@ export default function Post({ post, updatePost, isLastPost }) {
         <img className="profile-picture" src={post.postedBy?.profilePicture} alt="profile picture" />
         <div className="user-info-wrapper" onMouseEnter={handleMouseEnterUserLink} onMouseLeave={handleMouseLeaveUserLink}>
           <a className="user-name" href="#">{post.postedBy?.username}</a>
-          <div className="user-panel" ref={userPanelRef} onMouseEnter={handleMouseEnterUserPanel} onMouseLeave={handleMouseLeaveUserPanel}>
+          <div className={isLastPost && post.type === "text" && post.body.length <= 800 ? `user-panel adjust-positioning` : `user-panel`} ref={userPanelRef} onMouseEnter={handleMouseEnterUserPanel} onMouseLeave={handleMouseLeaveUserPanel}>
             <div className="user-panel-header">
               <img className="panel-profile-picture" src={post.postedBy?.profilePicture} alt="profile picture" />
               <div className="user-stats">
@@ -174,11 +174,11 @@ export default function Post({ post, updatePost, isLastPost }) {
       <div className="post-buttons-container">
         <button className={`feedback-buttons ${likesHovered[post._id] ? 'hover-likes' : ''} ${dislikesHovered[post._id] ? 'hover-dislikes' : ''}`}>
           <div className="likes-container" onClick={() => handleClickPostLikeButton(post._id)} onMouseEnter={() => handleMouseEnterLikesButton(post._id)} onMouseLeave={() => handleMouseLeaveLikesButton(post._id)}>
-            <span>{post.likes.length || 0}</span>
+            <span className="like-count">{post.likes.length || 0}</span>
             <img className="thumbs-up-icon" src={thumbsUpIcon} alt="Like" />
           </div>
           <div className="dislikes-container" onClick={() => handleClickPostDislikeButton(post._id)} onMouseEnter={() => handleMouseEnterDislikesButton(post._id)} onMouseLeave={() => handleMouseLeaveDislikesButton(post._id)}>
-            <span>{post.dislikes.length || 0}</span>
+            <span className="dislike-count">{post.dislikes.length || 0}</span>
             <img className="thumbs-down-icon" src={thumbsDownIcon} alt="Dislike" />
           </div>
         </button>

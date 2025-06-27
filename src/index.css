@@ -16,6 +16,7 @@ body {
   min-height: 100vh;
   color: inherit;
   background-color: inherit;
+  overflow: hidden;
 }
 
 .page-content {
@@ -70,6 +71,7 @@ body {
   resize: none;
   width: 100%;
   max-width: none;
+  min-height: 259px;
   height: 100%;
 }
 
@@ -135,6 +137,7 @@ body {
   background-repeat: no-repeat;
   position: relative;
   overflow: hidden;
+  min-height: 300px;
 }
 
 .media-upload-info {
@@ -871,7 +874,9 @@ nav button:first-of-type {
   padding-right: 10px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
+  width: 40px;
 }
 
 .dislikes-container {
@@ -881,7 +886,17 @@ nav button:first-of-type {
   padding-left: 10px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 5px;
+  width: 40px;
+}
+
+.like-count {
+  width: 15px;
+}
+
+.dislike-count {
+  width: 15px;
 }
 
 .comments-button {
@@ -951,6 +966,12 @@ nav button:first-of-type {
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.15s ease, visibility 0.15s ease;
+  overflow: hidden;
+}
+
+.adjust-positioning {
+  bottom: 30px;
+  top: auto;
 }
 
 .user-panel.active {
@@ -1236,6 +1257,7 @@ nav button:first-of-type {
   width: 95%;
   max-width: 715px;
   gap: 20px;
+  align-items: first baseline;
 }
 
 .user-name-label {
@@ -1248,6 +1270,7 @@ nav button:first-of-type {
   font-size: large;
   font-weight: normal;
   color: inherit;
+  word-break: break-all;
 }
 
 .about-container {
@@ -1403,4 +1426,9 @@ nav button:first-of-type {
 
 textarea:focus {
   outline: none !important;
+}
+
+.character-count {
+  font-size: 0.7rem;
+  min-width: 40px;
 }

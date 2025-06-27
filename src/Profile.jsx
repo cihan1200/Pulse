@@ -75,12 +75,14 @@ export default function Profile() {
           <button className="cancel deactive" onClick={() => cancelChanges(setLoading, setTrigger)}>Cancel</button>
         </div>
         <div className="new-username-input-container hide">
-          <input className="new-username-input" autoComplete="off" onChange={(e) => setNewUserName(e.target.value)} name="username" type="text" value={newUserName} placeholder="Enter new username" />
+          <input className="new-username-input" autoComplete="off" onChange={(e) => e.target.value.length <= 50 ? setNewUserName(e.target.value) : null} name="username" type="text" value={newUserName} placeholder="Enter new username" />
+          <span className="character-count">{newUserName.length}/50</span>
           <button className={newUserName !== "" ? "apply-button" : "apply-button deactivate"} onClick={() => applyUserNameChanges(setUserName)} > <img className="apply-icon" src={circleCheckIcon} alt="Save" /> </button>
           <button className="reject-button" onClick={rejectUserNameChanges}><img className="reject-icon" src={circleXMarkIcon} alt="Cancel" /></button>
         </div>
         <div className="new-about-field-container hide">
-          <textarea className="new-about-field" onChange={(e) => setNewAbout(e.target.value)} value={newAbout} name="about" placeholder="Tell us about yourself" />
+          <textarea className="new-about-field" onChange={(e) => e.target.value.length <= 500 ? setNewAbout(e.target.value) : null} value={newAbout} name="about" placeholder="Tell us about yourself" />
+          <span className="character-count">{newAbout.length}/500</span>
           <button className={newAbout !== "" ? "apply-button" : "apply-button deactivate"} onClick={() => applyAboutChanges(setAbout)} ><img className="apply-icon" src={circleCheckIcon} alt="Save" /></button>
           <button className="reject-button" onClick={rejectAboutChanges}><img className="reject-icon" src={circleXMarkIcon} alt="Cancel" /></button>
         </div>

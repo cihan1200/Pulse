@@ -17,8 +17,7 @@ export default function Create() {
   const [loading, setLoading] = useState(false);
   const timeoutRef = useRef(null);
   const navigate = useNavigate();
-  const rootDiv = document.getElementById("root");
-  rootDiv.style.height = "100vh";
+
 
   useEffect(() => {
     if (uploadError !== "") {
