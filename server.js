@@ -327,7 +327,7 @@ app.delete('/api/comments/:commentId', authenticate, async (req, res) => {
   }
 });
 
-app.post('/users/:userId/follow', async (req, res) => {
+app.post('/follow', async (req, res) => {
   const { userId, userToFollowId } = req.body;
   try {
     const userToFollow = await User.findById(userToFollowId);
