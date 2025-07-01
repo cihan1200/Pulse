@@ -140,7 +140,7 @@ export default function MediaPostForm({ setUploadError, title, setTitle, mediaFi
   return (
     <>
       <label className="post-title-label" htmlFor="post-title">Title</label>
-      <input className="post-title" id="post-title" type="text" value={title} onChange={handleTitleChange} />
+      <input className="post-title" autoComplete="off" id="post-title" type="text" value={title} onChange={handleTitleChange} />
       <span className="char-counter">{title.length}/{maxTitleLength}</span>
 
       <div

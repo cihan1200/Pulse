@@ -6,6 +6,7 @@ import Login from "./Login";
 import Create from "./Create";
 import Comments from "./Comments";
 import Profile from "./Profile";
+import Signout from "./Signout";
 
 export default function App() {
   const router = createBrowserRouter([{
@@ -45,6 +46,14 @@ export default function App() {
     element: (
       <PrivateRoute>
         <Profile />
+      </PrivateRoute>
+    )
+  },
+  {
+    path: "/signout",
+    element: (
+      <PrivateRoute>
+        <Signout />
       </PrivateRoute>
     )
   }

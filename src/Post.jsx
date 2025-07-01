@@ -19,9 +19,12 @@ export default function Post({ post, updatePost, isLastPost }) {
   const userPanelRef = useRef(null);
   const [mediaIndex, setMediaIndex] = useState(0);
   const [followers, setFollowers] = useState(post.postedBy?.followers || []);
+  const [isFollowing, setIsFollowing] = useState(followers.includes(userId));
   const medias = post.media || [];
 
-  useEffect(() => { }, [followers]);
+  useEffect(() => {
+    setIsFollowing(followers.includes(userId));
+  }, [followers, userId]);
 
   const handleMouseEnterUserLink = () => {
     clearTimeout(timeoutRef.current);
@@ -133,14 +136,19 @@ export default function Post({ post, updatePost, isLastPost }) {
   };
 
   const handleFollowUser = async (userToFollowId) => {
-    if (!userId) {
-      return;
-    }
+    if (!userId) return;
     try {
-      const response = await axios.post(`https://pulse-0o0k.onrender.com/follow`, { userId, userToFollowId });
+      const response = await axios.post(`https://pulse-0o0k.onrender.com/follow`, {
+        userId,
+        userToFollowId,
+        action: isFollowing ? "unfollow" : "follow"
+      });
+
       setFollowers(response.data.followers);
+      setIsFollowing(response.data.followers.includes(userId)); // ✅ update isFollowing state
     } catch (error) {
-      console.error("Error following user:", error);
+      console.error("Error updating follow status:", error);
+      setFollowers(followers); // optional: rollback followers
     }
   };
 
@@ -160,7 +168,14 @@ export default function Post({ post, updatePost, isLastPost }) {
             </div>
             <div className="user-bio">{post.postedBy?.about}</div>
             <div className="user-actions">
-              <button className="follow-button" onClick={() => handleFollowUser(post.postedBy?._id)}>Follow</button>
+              {userId !== post.postedBy?._id && (
+                <button
+                  className={`follow-button ${isFollowing ? 'following' : ''}`}
+                  onClick={() => handleFollowUser(post.postedBy?._id)}
+                >
+                  {isFollowing ? "Following" : "Follow"}
+                </button>
+              )}
             </div>
           </div>
         </div>

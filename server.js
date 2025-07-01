@@ -328,18 +328,41 @@ app.delete('/api/comments/:commentId', authenticate, async (req, res) => {
 });
 
 app.post('/follow', async (req, res) => {
-  const { userId, userToFollowId } = req.body;
+  const { userId, userToFollowId, action } = req.body;
+
   try {
-    const userToFollow = await User.findById(userToFollowId);
-    if (!userToFollow) {
+    // Validate users exist
+    const [currentUser, userToFollow] = await Promise.all([
+      User.findById(userId),
+      User.findById(userToFollowId)
+    ]);
+
+    if (!currentUser || !userToFollow) {
       return res.status(404).json({ message: "User not found" });
     }
-    userToFollow.followers.push(userId);
+
+    // Determine action
+    const shouldFollow = action === "follow";
+
+    // Update followers
+    if (shouldFollow) {
+      if (!userToFollow.followers.includes(userId)) {
+        userToFollow.followers.push(userId);
+      }
+    } else {
+      userToFollow.followers = userToFollow.followers.filter(
+        id => id.toString() !== userId
+      );
+    }
+
     await userToFollow.save();
-    res.json({ message: "Follow status updated", followers: userToFollow.followers });
+    res.json({
+      message: shouldFollow ? "Followed successfully" : "Unfollowed successfully",
+      followers: userToFollow.followers
+    });
   } catch (error) {
-    console.error("Error following user:", error);
-    res.status(500).json({ message: "Server error while following user" });
+    console.error("Error updating follow status:", error);
+    res.status(500).json({ message: "Server error while updating follow status" });
   }
 });
 

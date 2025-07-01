@@ -1450,3 +1450,17 @@ textarea:focus {
   height: 1em;
   width: 1em;
 }
+
+.follow-button {
+  /* Your existing styles */
+  transition: background-color 0.3s;
+}
+
+.follow-button.following {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.follow-button.following:hover {
+  background-color: #45a049;
+}

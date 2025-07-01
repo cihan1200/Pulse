@@ -17,7 +17,7 @@ export default function TextPostForm({ title, setTitle, body, setBody }) {
   return (
     <>
       <label className="post-title-label" htmlFor="post-title">Title</label>
-      <input className="post-title" id="post-title" type="text" value={title} onChange={handleTitleChange} />
+      <input className="post-title" autoComplete="off" id="post-title" type="text" value={title} onChange={handleTitleChange} />
       <span className="char-counter">{title.length}/{maxTitleLength}</span>
       <label className="text-body-label" htmlFor="text-body">Body</label>
       <textarea className="text-body" id="text-body" type="text" value={body} onChange={handleBodyChange} />

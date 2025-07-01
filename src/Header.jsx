@@ -54,9 +54,8 @@ export default function Header() {
       <div className="menu-wrapper">
         <nav className="menu hidden" id="menu">
           <button className="links-button" onClick={() => { navigate("/home"); }}>Home</button>
-          <button className="links-button" onClick={() => { navigate("/about"); }}>About</button>
           <button className="links-button" onClick={() => { navigate("/profile"); }}>Profile</button>
-          <button className="links-button" onClick={() => { navigate("/contact"); }}>Contact</button>
+          <button className="links-button" onClick={() => { navigate("/signout"); }}>Sign Out</button>
           <label className="switch">
             <input type="checkbox" onChange={toggleTheme} ref={checkboxRef} />
             <span className="slider round">🌙☀️</span>
