@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import thumbsUpIcon from "./assets/thumbs-up-icon.svg";
@@ -7,6 +7,7 @@ import commentIcon from "./assets/comment-icon.svg";
 import prevMediaButtonIcon from "./assets/prev-media-button-icon.svg";
 import nextMediaButtonIcon from "./assets/next-media-button-icon.svg";
 import axios from "axios";
+import { set } from "mongoose";
 
 export default function Post({ post, updatePost, isLastPost }) {
   const [likesHovered, setLikesHovered] = useState({});
@@ -18,7 +19,10 @@ export default function Post({ post, updatePost, isLastPost }) {
   const timeoutRef = useRef(null);
   const userPanelRef = useRef(null);
   const [mediaIndex, setMediaIndex] = useState(0);
+  const [followers, setFollowers] = useState(post.postedBy?.followers || []);
   const medias = post.media || [];
+
+  useEffect(() => { }, [followers]);
 
   const handleMouseEnterUserLink = () => {
     clearTimeout(timeoutRef.current);
@@ -137,7 +141,7 @@ export default function Post({ post, updatePost, isLastPost }) {
 
     try {
       const response = await axios.post(`https://pulse-0o0k.onrender.com/users/${userId}/follow`, { token });
-      // Update UI based on follow success
+      setFollowers(response.data.followers);
     } catch (error) {
       console.error("Error following user:", error);
     }
@@ -154,7 +158,7 @@ export default function Post({ post, updatePost, isLastPost }) {
               <img className="panel-profile-picture" src={post.postedBy?.profilePicture} alt="profile picture" />
               <div className="user-stats">
                 <span className="user-panel-name">{post.postedBy?.username}</span>
-                <span className="follower-count">{post.postedBy?.followers.length} followers</span>
+                <span className="follower-count">{followers.length} followers</span>
               </div>
             </div>
             <div className="user-bio">{post.postedBy?.about}</div>
