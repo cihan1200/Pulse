@@ -327,22 +327,16 @@ app.delete('/api/comments/:commentId', authenticate, async (req, res) => {
   }
 });
 
-app.post('/users/:userId/follow', authenticate, async (req, res) => {
-  const { userId } = req.params;
-  const token = req.body.token;
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
+app.post('/users/:userId/follow', async (req, res) => {
+  const { userId, userToFollowId } = req.body;
   try {
-    const targetUser = await User.findById(userId);
-
-    if (!targetUser) {
+    const userToFollow = await User.findById(userToFollowId);
+    if (!userToFollow) {
       return res.status(404).json({ message: "User not found" });
     }
-
-    targetUser.followers.push(decoded.id);
-    await targetUser.save();
-
-    res.json({ message: "Follow status updated", followers: targetUser.followers });
+    userToFollow.followers.push(userId);
+    await userToFollow.save();
+    res.json({ message: "Follow status updated", followers: userToFollow.followers });
   } catch (error) {
     console.error("Error following user:", error);
     res.status(500).json({ message: "Server error while following user" });
