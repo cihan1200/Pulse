@@ -327,6 +327,26 @@ app.delete('/api/comments/:commentId', authenticate, async (req, res) => {
   }
 });
 
+app.post('/users/:userId/follow', authenticate, async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const targetUser = await User.findById(userId);
+
+    if (!targetUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    targetUser.followers.push(decoded.id);
+    await targetUser.save();
+
+    res.json({ message: "Follow status updated", followers: targetUser.followers });
+  } catch (error) {
+    console.error("Error following user:", error);
+    res.status(500).json({ message: "Server error while following user" });
+  }
+});
+
 app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });

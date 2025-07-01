@@ -129,6 +129,20 @@ export default function Post({ post, updatePost, isLastPost }) {
     navigate(`/comments`, { state: { postId } });
   };
 
+  const handleFollowUser = async (userId) => {
+    if (!token) {
+      // Handle not logged in state
+      return;
+    }
+
+    try {
+      const response = await axios.post(`https://pulse-0o0k.onrender.com/users/${userId}/follow`, { token });
+      // Update UI based on follow success
+    } catch (error) {
+      console.error("Error following user:", error);
+    }
+  };
+
   return (
     <div className="post-container">
       <div className="user-info">
@@ -145,7 +159,7 @@ export default function Post({ post, updatePost, isLastPost }) {
             </div>
             <div className="user-bio">{post.postedBy?.about}</div>
             <div className="user-actions">
-              <button className="follow-button">Follow</button>
+              <button className="follow-button" onClick={() => handleFollowUser(post.postedBy?.id)}>Follow</button>
             </div>
           </div>
         </div>
