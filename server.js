@@ -48,6 +48,19 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 mongoose.connect(process.env.MONGODB_URI).then(() => console.log("Database connected.")).catch((err) => console.error("MongoDB connection error:", err));
 
+const authenticate = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1];
+  if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    res.status(401).json({ message: "Invalid token" });
+  }
+};
+
 app.post('/upload', upload.array('media'), async (req, res) => {
   const { userId, title, body, type } = req.body;
   let mediaUrls = [];
@@ -280,6 +293,37 @@ app.put('/users/:userId/about', async (req, res) => {
   } catch (error) {
     console.error("Error updating about section:", error);
     res.status(500).json({ message: "Server error while updating about section" });
+  }
+});
+
+app.delete('/api/comments/:commentId', authenticate, async (req, res) => {
+  const { commentId } = req.params;
+
+  // Validate comment ID
+  if (!mongoose.Types.ObjectId.isValid(commentId)) {
+    return res.status(400).json({ message: "Invalid comment ID format" });
+  }
+
+  try {
+    // Find and delete the comment
+    const comment = await Comment.findByIdAndDelete(commentId);
+
+    if (!comment) {
+      return res.status(404).json({ message: "Comment not found" });
+    }
+
+    // Remove comment reference from post
+    await Post.findByIdAndUpdate(comment.postId, {
+      $pull: { comments: commentId }
+    });
+
+    res.status(200).json({ message: "Comment deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    res.status(500).json({
+      message: "Server error while deleting comment",
+      error: error.message
+    });
   }
 });
 

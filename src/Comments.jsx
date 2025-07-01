@@ -5,6 +5,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Post from './Post';
 import axios from 'axios';
+import deleteIcon from './assets/delete-icon.svg';
 
 export default function Comments() {
   const [comments, setComments] = useState([]);
@@ -87,6 +88,46 @@ export default function Comments() {
     }
   };
 
+  const handleDeleteComment = async (commentId) => {
+    if (!commentId) {
+      console.error("Missing comment ID for deletion");
+      return;
+    }
+
+    try {
+      await axios.delete(
+        `https://pulse-0o0k.onrender.com/api/comments/${commentId}`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        }
+      );
+
+      // Optimistically remove comment from UI
+      setComments(prevComments =>
+        prevComments.filter(comment => comment._id !== commentId)
+      );
+
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+
+      // Detailed error logging
+      if (error.response) {
+        console.error("Response data:", error.response.data);
+        console.error("Response status:", error.response.status);
+      } else if (error.request) {
+        console.error("No response received:", error.request);
+      } else {
+        console.error("Request setup error:", error.message);
+      }
+
+      // Show user-friendly error
+      alert("Failed to delete comment. Please try again.");
+    }
+  };
+
   return (
     <>
       <Header />
@@ -115,6 +156,7 @@ export default function Comments() {
               <div className="user">
                 <img className="pp" src={comment.postedBy.profilePicture} alt="profile-picture" />
                 <span><span className="username">{comment.postedBy.username}</span> • {new Date(comment.createdAt).toLocaleDateString()}</span>
+                {comment.postedBy._id === userId && <button className="delete-button" onClick={() => handleDeleteComment(comment._id)}><img className='delete-icon' src={deleteIcon} alt="delete" /></button>}
               </div>
               <p className="comment">{comment.content}</p>
             </div>

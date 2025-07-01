@@ -1432,3 +1432,20 @@ textarea:focus {
   font-size: 0.7rem;
   min-width: 40px;
 }
+
+.delete-button {
+  background-color: inherit;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 0.7rem;
+}
+
+.delete-icon {
+  height: 1em;
+  width: 1em;
+}
