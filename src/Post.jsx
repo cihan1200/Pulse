@@ -7,7 +7,6 @@ import commentIcon from "./assets/comment-icon.svg";
 import prevMediaButtonIcon from "./assets/prev-media-button-icon.svg";
 import nextMediaButtonIcon from "./assets/next-media-button-icon.svg";
 import axios from "axios";
-import { set } from "mongoose";
 
 export default function Post({ post, updatePost, isLastPost }) {
   const [likesHovered, setLikesHovered] = useState({});

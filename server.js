@@ -329,6 +329,8 @@ app.delete('/api/comments/:commentId', authenticate, async (req, res) => {
 
 app.post('/users/:userId/follow', authenticate, async (req, res) => {
   const { userId } = req.params;
+  const token = req.body.token;
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
   try {
     const targetUser = await User.findById(userId);
