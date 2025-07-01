@@ -45,7 +45,6 @@ export default function Header() {
           <img className="brand-logo" src={pulseLogo} alt="vite logo" />
           <span>Pulse</span>
         </button>
-        <input className="search-bar" type="text" />
         <div className="header-buttons">
           <button className="create-button" onClick={() => { navigate("/create"); }}><img className="plus-icon" src={plusIcon} alt="plus icon" />Create</button>
           <button className="menu-button" aria-label="Toggle menu" onClick={toggleMenu}>☰</button>

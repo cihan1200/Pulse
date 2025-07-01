@@ -1464,3 +1464,59 @@ textarea:focus {
 .follow-button.following:hover {
   background-color: #45a049;
 }
+
+.signout-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: inherit;
+}
+
+.signout-card {
+  background: inherit;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+.signout-card h1 {
+  font-size: 1.75rem;
+  color: inherit;
+  margin-bottom: 1rem;
+}
+
+.signout-card p {
+  color: inherit;
+  margin-bottom: 1.5rem;
+}
+
+.signout-card button {
+  background-color: inherit;
+  color: inherit;
+  border: 1px solid #b197fc;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.signout-card button:hover {
+  background-color: rgba(177, 151, 252, 0.3);
+}
+
+.signout-buttons-container {
+  font-family: "Raleway", sans-serif;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.signout-buttons-container button {
+  font-family: "Raleway", sans-serif;
+}
