@@ -12,7 +12,7 @@ export default function Signin({ onClose, onSignup }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate;
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
