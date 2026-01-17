@@ -2,16 +2,33 @@ import express from "express";
 import Post from "../models/Post.js";
 import multer from "multer";
 import { verifyToken } from "../middleware/auth.js";
+// 1. Import Cloudinary
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 const router = express.Router();
 
+// 2. CONFIG CLOUDINARY
+// (Render already has these env vars from your previous step)
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
 /* ======================================================
-   MULTER CONFIG (file uploads)
+   3. SETUP MULTER WITH CLOUDINARY
 ====================================================== */
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, "uploads/"),
-  filename: (_req, file, cb) =>
-    cb(null, `${Date.now()}-${file.originalname}`)
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    return {
+      folder: "social_app_posts", // Folder name in Cloudinary
+      // 'auto' lets Cloudinary detect if it's a video or image
+      resource_type: "auto",
+      allowed_formats: ["jpg", "png", "jpeg", "webp", "mp4", "mov", "avi"],
+    };
+  },
 });
 
 const upload = multer({ storage });
@@ -19,8 +36,6 @@ const upload = multer({ storage });
 /* ======================================================
    HELPERS
 ====================================================== */
-
-// Fetch a post with populated fields (single source of truth)
 const getPopulatedPostById = (postId) =>
   Post.findById(postId)
     .populate("postedBy", "username profilePicture bio followers")
@@ -32,7 +47,6 @@ const getPopulatedPostById = (postId) =>
 
 /**
  * CREATE POST
- * Creates a new post (text, image(s), or video)
  */
 router.post(
   "/",
@@ -43,25 +57,24 @@ router.post(
   ]),
   async (req, res) => {
     try {
-      // NEW: Extract category from req.body
       const { title, body, type, category } = req.body;
       let content = [];
 
+      // 4. Update Logic to use Cloudinary URLs (file.path)
       if (type === "text") {
         content = [body];
       } else if (req.files?.images) {
-        content = req.files.images.map(
-          (file) => `/uploads/${file.filename}`
-        );
+        // Map over the files and get the Cloudinary URL
+        content = req.files.images.map((file) => file.path);
       } else if (req.files?.video) {
-        content = [`/uploads/${req.files.video[0].filename}`];
+        // Get the Cloudinary URL for the video
+        content = [req.files.video[0].path];
       }
 
       const newPost = new Post({
         postedBy: req.user.id,
         postTitle: title,
         postType: type,
-        // NEW: Save the category
         category: category || "General",
         description: body || "No description added for this post.",
         postContent: content
@@ -70,7 +83,7 @@ router.post(
       const savedPost = await newPost.save();
       res.status(201).json(savedPost);
     } catch (err) {
-      console.error(err);
+      console.error("Error creating post:", err);
       res.status(500).json({ error: err.message });
     }
   }
@@ -78,7 +91,6 @@ router.post(
 
 /**
  * GET POSTS
- * Fetches posts (optionally filtered by userId OR search term) with pagination
  */
 router.get("/", async (req, res) => {
   try {
@@ -92,7 +104,6 @@ router.get("/", async (req, res) => {
       query.postedBy = req.query.userId;
     }
 
-    // NEW: Category Filter
     if (req.query.category && req.query.category !== "All") {
       query.category = req.query.category;
     }
@@ -124,7 +135,6 @@ router.get("/", async (req, res) => {
 
 /**
  * GET USER COMMENTS
- * Returns all comments made by a specific user
  */
 router.get("/comments/:userId", async (req, res) => {
   try {
@@ -161,7 +171,6 @@ router.get("/comments/:userId", async (req, res) => {
 
 /**
  * GET SINGLE POST
- * Fetches one post by ID including comments
  */
 router.get("/:id", async (req, res) => {
   try {
@@ -176,7 +185,6 @@ router.get("/:id", async (req, res) => {
 
 /**
  * ADD COMMENT
- * Adds a comment to a post
  */
 router.post("/:id/comment", verifyToken, async (req, res) => {
   try {
@@ -204,7 +212,6 @@ router.post("/:id/comment", verifyToken, async (req, res) => {
 
 /**
  * EDIT COMMENT
- * Updates an existing comment owned by the user
  */
 router.put("/:postId/comment/:commentId", verifyToken, async (req, res) => {
   try {
@@ -236,7 +243,6 @@ router.put("/:postId/comment/:commentId", verifyToken, async (req, res) => {
 
 /**
  * DELETE COMMENT
- * Deletes a comment owned by the user
  */
 router.delete("/:postId/comment/:commentId", verifyToken, async (req, res) => {
   try {
@@ -280,7 +286,6 @@ router.put("/:id/like", verifyToken, async (req, res) => {
       post.dislikes.pull(userId);
     }
 
-    // NEW: Update the count
     post.likesCount = post.likes.length;
 
     await post.save();
@@ -307,7 +312,6 @@ router.put("/:id/dislike", verifyToken, async (req, res) => {
       post.likes.pull(userId);
     }
 
-    // NEW: Update the count (because likes might have decreased)
     post.likesCount = post.likes.length;
 
     await post.save();
@@ -319,7 +323,6 @@ router.put("/:id/dislike", verifyToken, async (req, res) => {
 
 /**
  * GET LIKED POSTS
- * Returns posts liked by a specific user
  */
 router.get("/likedBy/:userId", async (req, res) => {
   try {
