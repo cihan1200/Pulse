@@ -1,0 +1,31 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  transition: opacity .2s ease;
+  line-height: 1.6;
+  outline: none;
+  max-width: max-content;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+.primary {
+  background-color: var(--color-primary);
+  color: var(--text-light);
+}
+
+.disabled {
+  pointer-events: none;
+  background-color: var(--color-primary-disabled);
+}

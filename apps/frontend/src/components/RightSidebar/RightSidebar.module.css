@@ -1,0 +1,140 @@
+.right-sidebar {
+  min-width: 300px;
+  width: 300px;
+  border-left: 1px solid rgba(0, 0, 0, .2); 
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 64px; 
+  background-color: var(--bg-color, #fff);
+  overflow-y: auto;
+  padding: 1rem;
+  padding-bottom: 5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 0.5rem;
+}
+
+.title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #6b7280;
+  letter-spacing: 0.05em;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: #4f46e5;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 0.8rem 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  border-radius: 8px;
+}
+
+.item:hover {
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.item-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-placeholder {
+  width: 20px;
+  height: 20px;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+}
+
+.mini-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.author {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.post-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-dark, #1f2937);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.stats {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  display: flex;
+  gap: 4px;
+}
+
+.large-thumb-container {
+  width: 90px;
+  height: 70px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.large-thumb-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.empty-message {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 1350px) {
+  .right-sidebar {
+    display: none;
+  }
+}

@@ -1,0 +1,55 @@
+:root {
+  /* --- Existing Variables --- */
+  --font-primary: 'Geom', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --color-primary: hsl(243, 100%, 68%);
+  --color-primary-disabled: hsl(243, 100%, 78%);
+  --color-primary-hovered: hsl(243, 100%, 61%);
+  --bg-dark: hsl(240, 2%, 10%);
+  --bg-light: hsl(210, 40%, 98%);
+  --bg-light-hovered: hsl(210, 40%, 93%);
+  --text-light: #f8fafc;
+  --text-dark: #1a1a1b;
+  --text-secondary: hsl(220, 9%, 46%); /* Matches #6b7280 */
+  --text-warning: #dc2626;
+  --text-secondary-hovered: hsl(220, 9%, 35%);
+  --border-dark: rgba(0, 0, 0, .2);
+  --popup-transparent-bg-dark: rgba(0, 0, 0, .5);
+
+  /* --- New Added Variables --- */
+  --bg-white: #ffffff;
+  --bg-gray-50: #f9fafb;
+  --bg-gray-100: #f3f4f6;
+  --bg-gray-200: #e5e7eb;
+  --bg-gray-300: #d1d5db;
+  --bg-danger-light: #fef2f2; /* Added for delete menu item hover */
+
+  --text-gray-400: #9ca3af;
+  --text-gray-600: #4b5563;
+  --text-gray-700: #374151;
+  --text-gray-800: #1f2937;
+  --text-heading: #111827;
+
+  --color-danger: #ef4444;
+  --color-danger-hover: #dc2626;
+
+  --border-light: #e5e7eb;
+  --border-white-transparent: rgba(255, 255, 255, 0.3);
+
+  /* --- Shadows --- */
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+html, body, input, button, textarea {
+  font-family: var(--font-primary);
+  color: var(--text-dark);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  padding: 0;
+  margin: 0;
+}
+
+* {
+  box-sizing: border-box;
+}

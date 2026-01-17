@@ -1,0 +1,133 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999999999999999999;
+  /* "forwards" keeps the state at the end of the animation */
+  animation: fadeIn 0.2s ease-out forwards; 
+}
+
+.modal-card {
+  background-color: var(--bg-white, #fff);
+  width: 100%;
+  max-width: 500px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: scaleIn 0.2s ease-out forwards;
+}
+
+/* --- NEW: Closing State Classes --- */
+
+/* When the closing class is added, run the exit animations */
+.overlay.closing {
+  animation: fadeOut 0.2s ease-in forwards;
+}
+
+.modal-card.closing {
+  animation: scaleOut 0.2s ease-in forwards;
+}
+
+/* --- Animations --- */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes scaleOut {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(0.95); opacity: 0; }
+}
+
+/* Keep your existing internal layout styles below, adjusted for the card */
+.first-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-light, #eee);
+}
+
+.title {
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: capitalize;
+}
+
+.close-button {
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+}
+.close-button:hover {
+  background-color: #f0f0f0;
+}
+
+.second-row {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.info {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input input,
+.input textarea {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #f7f7f7;
+}
+
+.input textarea {
+  min-height: 120px;
+  resize: none;
+}
+
+.input input:focus,
+.input textarea:focus {
+  outline: 2px solid var(--color-primary, #0079D3);
+  background-color: #fff;
+}
+
+.third-row {
+  padding: 1rem 1.5rem;
+  background-color: #f7f7f7;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-top: 1px solid #eee;
+}

@@ -1,0 +1,14 @@
+{
+  "name": "pulse",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev --prefix apps/frontend\" \"npm run dev --prefix apps/backend\"",
+    "install-all": "npm install"
+  },
+  "workspaces": [
+    "apps/*"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

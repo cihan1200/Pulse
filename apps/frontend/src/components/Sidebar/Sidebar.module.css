@@ -1,0 +1,44 @@
+.sidebar {
+  min-width: 300px;
+  border-right: 1px solid rgba(0, 0, 0, .2);
+  height: 100vh;
+  position: fixed;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  font-size: 1.1rem;
+  padding: 1rem;
+}
+
+/* CHANGED: Target class instead of 'a' tag */
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  text-decoration: none;
+  color: var(--text-dark);
+  padding: .8rem 1rem;
+  transition: all .2s ease;
+  border-radius: 15px;
+  cursor: pointer; /* Added cursor pointer here */
+}
+
+.navItem:hover {
+  background-color: rgba(0, 0, 0, .05);
+}
+
+/* NEW: Active state style */
+.active {
+  background-color: rgba(0, 0, 0, 0.05); /* or use a primary color tint */
+  font-weight: 600;
+  color: var(--color-primary); /* Assuming you have this var, else use #4f46e5 */
+}
+
+@media (max-width: 1350px) {
+  .sidebar {
+    display: none;
+  }
+}
