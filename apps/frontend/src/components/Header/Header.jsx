@@ -159,6 +159,7 @@ export default function Header() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     navigate("/");
+    window.location.reload();
   };
 
   if (authLoading) {

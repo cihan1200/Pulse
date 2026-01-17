@@ -34,6 +34,7 @@ export default function Signup({ onClose, onSignin }) {
     localStorage.setItem("user", JSON.stringify(data.user));
     localStorage.setItem("auth-loading", "true");
     navigate("/");
+    window.location.reload();
   };
 
   // --- 3. Google Login Hook ---

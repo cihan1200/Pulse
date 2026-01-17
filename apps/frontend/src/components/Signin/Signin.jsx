@@ -76,6 +76,7 @@ export default function Signin({ onClose, onSignup }) {
     localStorage.setItem("user", JSON.stringify(user));
     localStorage.setItem("auth-loading", "true");
     navigate("/");
+    window.location.reload();
   };
 
   return (
