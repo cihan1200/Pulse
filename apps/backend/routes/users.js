@@ -4,21 +4,31 @@ import Post from "../models/Post.js";
 import { verifyToken } from "../middleware/auth.js";
 import multer from "multer";
 import bcrypt from "bcryptjs";
+// 1. Import Cloudinary and Storage Engine
+import { v2 as cloudinary } from "cloudinary";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
 
 const router = express.Router();
 
-// --- 1. SETUP MULTER ---
-const storage = multer.diskStorage({
-  destination: function (_req, _file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (_req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  }
+// --- 2. CONFIG CLOUDINARY ---
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+// --- 3. SETUP MULTER WITH CLOUDINARY ---
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "social_app_users", // The folder name in your Cloudinary dashboard
+    allowed_formats: ["jpg", "png", "jpeg", "webp"],
+  },
+});
+
 const upload = multer({ storage: storage });
 
-// --- 2. GET USER ---
+// --- 4. GET USER ---
 router.get("/:id", verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
@@ -29,7 +39,7 @@ router.get("/:id", verifyToken, async (req, res) => {
   }
 });
 
-// --- 3. UPDATE USER ---
+// --- 5. UPDATE USER ---
 router.put("/:id", verifyToken,
   upload.fields([{ name: "profilePicture", maxCount: 1 }, { name: "bannerPicture", maxCount: 1 }]),
   async (req, res) => {
@@ -51,12 +61,14 @@ router.put("/:id", verifyToken,
         user.password = await bcrypt.hash(password, 12);
       }
 
+      // Handle Image Uploads via Cloudinary
       if (req.files) {
         if (req.files["profilePicture"]) {
-          user.profilePicture = `/uploads/${req.files["profilePicture"][0].filename}`;
+          // Cloudinary provides the full URL in .path
+          user.profilePicture = req.files["profilePicture"][0].path;
         }
         if (req.files["bannerPicture"]) {
-          user.bannerPicture = `/uploads/${req.files["bannerPicture"][0].filename}`;
+          user.bannerPicture = req.files["bannerPicture"][0].path;
         }
       }
 
@@ -69,7 +81,7 @@ router.put("/:id", verifyToken,
     }
   });
 
-// --- 4. FOLLOW / UNFOLLOW USER (NEW) ---
+// --- 6. FOLLOW / UNFOLLOW USER ---
 router.put("/:id/follow", verifyToken, async (req, res) => {
   if (req.user.id === req.params.id) {
     return res.status(403).json({ message: "You cannot follow yourself" });
@@ -100,7 +112,7 @@ router.put("/:id/follow", verifyToken, async (req, res) => {
   }
 });
 
-// --- 5. DELETE USER ---
+// --- 7. DELETE USER ---
 router.delete("/:id", verifyToken, async (req, res) => {
   if (req.user.id !== req.params.id) {
     return res.status(403).json({ message: "You can only delete your own account" });
