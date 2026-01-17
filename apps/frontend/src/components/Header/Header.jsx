@@ -34,7 +34,12 @@ export default function Header() {
   const [user, setUser] = useState(null);
   const [panelVisible, setPanelVisible] = useState(false);
   const [authLoading, setAuthLoading] = useState(false);
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+  const [theme, setTheme] = useState(() =>
+    typeof window !== "undefined"
+      ? localStorage.getItem("theme") || "light"
+      : "light"
+  );
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Search State
@@ -116,13 +121,18 @@ export default function Header() {
 
   useEffect(() => {
     const loadingFlag = localStorage.getItem("auth-loading");
+
     if (loadingFlag) {
       setAuthLoading(true);
       localStorage.removeItem("auth-loading");
       window.location.reload();
       return;
     }
-    if (storedUser) setUser(safeGetJSON(storedUser, null));
+
+    const storedUser = safeGetJSON("user", null);
+    if (storedUser) {
+      setUser(storedUser);
+    }
   }, []);
 
   useEffect(() => {
