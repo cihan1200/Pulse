@@ -8,6 +8,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import RightSidebar from "@/components/RightSidebar";
 import SaveChangesModal from "./SaveChangesMoadal";
+import { safeGetJSON } from "@/utils/safeStorage";
 
 export default function EditProfile() {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ export default function EditProfile() {
   const closeTimerRef = useRef(null);
 
   const currentUser = useMemo(() => {
-    try { return JSON.parse(localStorage.getItem("user")); }
+    try { return safeGetJSON("user", null); }
     catch { return null; }
   }, []);
 

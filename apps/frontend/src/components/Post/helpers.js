@@ -2,11 +2,11 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "@/api/axios";
 import { getImageUrl } from "@/utils/imageHelper";
+import { safeGetJSON } from "@/utils/safeStorage";
 
 export const getCurrentUser = () => {
   try {
-    const user = localStorage.getItem("user");
-    return user ? JSON.parse(user) : null;
+    return safeGetJSON(user, null);
   } catch (error) {
     return null;
   }

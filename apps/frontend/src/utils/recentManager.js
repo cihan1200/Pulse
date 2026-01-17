@@ -1,32 +1,19 @@
+import { safeGetJSON, safeSetJSON } from "@/utils/safeStorage";
+
 const STORAGE_KEY = "pulse_recent_posts";
 const MAX_RECENTS = 6;
 
-// Ensure browser-only execution (Render / SSR safety)
 const isBrowser =
   typeof window !== "undefined" &&
   typeof localStorage !== "undefined";
 
-/**
- * Get recent posts safely
- */
 export const getRecentPosts = () => {
   if (!isBrowser) return [];
 
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-
-    if (!stored || stored === "undefined") return [];
-
-    const parsed = JSON.parse(stored);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
+  const parsed = safeGetJSON(STORAGE_KEY, []);
+  return Array.isArray(parsed) ? parsed : [];
 };
 
-/**
- * Add a post to recent posts
- */
 export const addRecentPost = (post) => {
   if (!isBrowser || !post) return;
 
@@ -49,14 +36,13 @@ export const addRecentPost = (post) => {
       visitedAt: new Date().toISOString()
     };
 
-    // Remove duplicates
     const filtered = current.filter(
       (p) => p?._id && p._id !== newEntry._id
     );
 
     const updated = [newEntry, ...filtered].slice(0, MAX_RECENTS);
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    safeSetJSON(STORAGE_KEY, updated);
 
     window.dispatchEvent(new Event("recentPostsUpdated"));
   } catch (e) {
@@ -64,9 +50,6 @@ export const addRecentPost = (post) => {
   }
 };
 
-/**
- * Clear all recent posts
- */
 export const clearRecentPosts = () => {
   if (!isBrowser) return;
 

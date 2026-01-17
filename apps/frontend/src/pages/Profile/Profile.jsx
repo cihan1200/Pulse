@@ -8,6 +8,7 @@ import Sidebar from "@/components/Sidebar";
 import Post from "@/components/Post";
 import api from "@/api/axios";
 import RightSidebar from "@/components/RightSidebar";
+import { safeGetJSON } from "@/utils/safeStorage";
 
 export default function Profile() {
   const { id } = useParams();
@@ -24,7 +25,7 @@ export default function Profile() {
 
   const currentUser = useMemo(() => {
     try {
-      return JSON.parse(localStorage.getItem("user"));
+      return safeGetJSON("user", null);
     } catch {
       return null;
     }

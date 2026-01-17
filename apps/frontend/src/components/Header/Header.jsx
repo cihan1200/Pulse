@@ -23,6 +23,7 @@ import Signin from "@/components/Signin";
 import Signup from "@/components/Signup";
 import { getImageUrl } from "@/utils/imageHelper";
 import api from "@/api/axios";
+import { safeGetJSON } from "@/utils/safeStorage";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -114,7 +115,6 @@ export default function Header() {
   };
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
     const loadingFlag = localStorage.getItem("auth-loading");
     if (loadingFlag) {
       setAuthLoading(true);
@@ -122,7 +122,7 @@ export default function Header() {
       window.location.reload();
       return;
     }
-    if (storedUser) setUser(JSON.parse(storedUser));
+    if (storedUser) setUser(safeGetJSON(storedUser, null));
   }, []);
 
   useEffect(() => {

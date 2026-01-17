@@ -14,6 +14,7 @@ import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import CommentItem from "@/components/CommentItem";
 import RightSidebar from "@/components/RightSidebar";
+import { safeGetJSON } from "@/utils/safeStorage";
 
 // --- REDUCER CONFIGURATION ---
 const ACTIONS = {
@@ -87,7 +88,7 @@ export default function PostDetails() {
 
   // --- 3. DERIVED VALUES ---
   const currentUser = useMemo(() => {
-    try { return JSON.parse(localStorage.getItem("user")); }
+    try { return safeGetJSON("user", null); }
     catch { return null; }
   }, []);
   const charCount = state.commentText.replace(/\s/g, "").length;
