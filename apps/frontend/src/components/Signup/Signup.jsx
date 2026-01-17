@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { X, Eye, EyeOff } from "lucide-react";
-import { useGoogleLogin } from "@react-oauth/google"; // 1. Import Hook
+import { useGoogleLogin } from "@react-oauth/google";
+import { useNavigate } from "react-router-dom";
 import api from "@/api/axios";
 import styles from "./Signup.module.css";
 
@@ -10,6 +11,7 @@ export default function Signup({ onClose, onSignin }) {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -31,7 +33,7 @@ export default function Signup({ onClose, onSignin }) {
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
     localStorage.setItem("auth-loading", "true");
-    window.location.reload();
+    navigate("/");
   };
 
   // --- 3. Google Login Hook ---
