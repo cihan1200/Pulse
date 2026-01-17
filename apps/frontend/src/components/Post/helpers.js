@@ -6,7 +6,7 @@ import { safeGetJSON } from "@/utils/safeStorage";
 
 export const getCurrentUser = () => {
   try {
-    return safeGetJSON(user, null);
+    return safeGetJSON("user", null);
   } catch (error) {
     return null;
   }
