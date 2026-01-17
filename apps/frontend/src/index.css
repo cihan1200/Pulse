@@ -1,7 +1,7 @@
 :root {
   /* --- Existing Variables --- */
   --font-primary: 'Geom', system-ui, Avenir, Helvetica, Arial, sans-serif;
-  --color-primary: hsl(243, 100%, 68%);
+  --color-primary: #645cff;
   --color-primary-disabled: hsl(243, 100%, 78%);
   --color-primary-hovered: hsl(243, 100%, 61%);
   --bg-dark: hsl(240, 2%, 10%);
