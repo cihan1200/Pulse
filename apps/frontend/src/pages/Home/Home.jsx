@@ -45,7 +45,7 @@ export default function Home() {
             : post.postContent.map((path) =>
               path.startsWith("http")
                 ? path
-                : `http://localhost:5000${path}`
+                : `${import.meta.env.VITE_API_URL}${path}`
             ),
         date: formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })
       }));
